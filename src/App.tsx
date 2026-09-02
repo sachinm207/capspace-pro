@@ -7,11 +7,12 @@ import {
   CheckCircle2, 
   XCircle, 
   ArrowRightLeft, 
-  Activity,
-  RefreshCw,
-  Plus,
-  Minus,
-  ShieldCheck
+  Activity, 
+  RefreshCw, 
+  Plus, 
+  Minus, 
+  ShieldCheck,
+  Sparkles
 } from 'lucide-react';
 import cbaData from './data/nba_cba_2025.json';
 import { Team, TeamTradeLeg, TradeValidationResult, Player } from './engine/types';
@@ -29,26 +30,20 @@ export default function App() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState('Live: Official NBA 2025–26 CBA Active');
 
-  // Initial baseline trade legs
+  // Initial clean baseline trade legs (empty canvas)
   const getInitialLegs = (t1: string, t2: string): TeamTradeLeg[] => {
-    const team1 = teams.find(t => t.id === t1) || teams[1];
-    const team2 = teams.find(t => t.id === t2) || teams[2];
-
-    const t2Target = team2.roster[0];
-    const t1Offer = team1.roster[4] || team1.roster[2];
-
     return [
       {
-        teamId: team1.id,
-        incomingPlayers: t2Target ? [t2Target] : [],
-        outgoingPlayers: t1Offer ? [t1Offer] : [],
+        teamId: t1,
+        incomingPlayers: [],
+        outgoingPlayers: [],
         incomingPicks: [],
         outgoingPicks: []
       },
       {
-        teamId: team2.id,
-        incomingPlayers: t1Offer ? [t1Offer] : [],
-        outgoingPlayers: t2Target ? [t2Target] : [],
+        teamId: t2,
+        incomingPlayers: [],
+        outgoingPlayers: [],
         incomingPicks: [],
         outgoingPicks: []
       }
@@ -107,6 +102,42 @@ export default function App() {
 
   const handleResetClick = () => {
     setTradeLegs(getInitialLegs(team1Id, team2Id));
+  };
+
+  const handleLoadDemo = () => {
+    setTeam1Id('NYK');
+    setTeam2Id('BKN');
+    setTeam3Id('CHA');
+    const nyk = teams.find(t => t.id === 'NYK') || teams[1];
+    const bkn = teams.find(t => t.id === 'BKN') || teams[2];
+    const bridges = bkn.roster.find(p => p.id === 'p_bridges_mikal') || bkn.roster[0];
+    const bogdanovic = nyk.roster.find(p => p.id === 'p_bogdanovic') || nyk.roster[4];
+    const sims = nyk.roster.find(p => p.id === 'p_sims') || nyk.roster[5];
+
+    setTradeLegs([
+      {
+        teamId: 'NYK',
+        incomingPlayers: bridges ? [bridges] : [],
+        outgoingPlayers: [bogdanovic, sims].filter(Boolean) as Player[],
+        incomingPicks: [],
+        outgoingPicks: ['2026 2nd Round Pick (NYK)']
+      },
+      {
+        teamId: 'BKN',
+        incomingPlayers: bogdanovic ? [bogdanovic] : [],
+        outgoingPlayers: bridges ? [bridges] : [],
+        incomingPicks: ['2026 2nd Round Pick (NYK)'],
+        outgoingPicks: []
+      },
+      {
+        teamId: 'CHA',
+        incomingPlayers: sims ? [sims] : [],
+        outgoingPlayers: [],
+        incomingPicks: ['2026 2nd Round Pick (NYK)'],
+        outgoingPicks: [],
+        tpeUsed: { id: 'tpe_hayward', amountAbsorbed: sims?.salary || 2092344 }
+      }
+    ]);
   };
 
   const handleLiveSync = () => {
@@ -316,15 +347,20 @@ export default function App() {
               <span className="font-bold text-amber-400">Active Trade Canvas:</span>
               <span className="text-slate-300 font-medium">{lastSyncTime}</span>
             </div>
-            <div className="flex items-center space-x-3">
-              <span className="text-[11px] text-slate-300 italic">
-                Pick teams or let external AI agents restructure trades via WebMCP.
-              </span>
+            <div className="flex items-center space-x-2">
+              <button 
+                onClick={handleLoadDemo}
+                className="text-xs bg-cyan-950/80 hover:bg-cyan-900 text-cyan-300 px-3 py-1.5 rounded-lg border border-cyan-500/40 flex items-center transition font-semibold shadow-sm"
+                title="Loads a pre-configured 3-team blockbuster trade scenario (NYK / BKN / CHA)"
+              >
+                <Sparkles className="w-3.5 h-3.5 mr-1.5 text-cyan-400" /> Load Demo Scenario
+              </button>
               <button 
                 onClick={handleResetClick}
-                className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1 rounded-lg border border-slate-700 flex items-center transition"
+                className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center transition"
+                title="Clears all incoming and outgoing players on the trade board"
               >
-                <RotateCcw className="w-3.5 h-3.5 mr-1.5" /> Reset Board
+                <RotateCcw className="w-3.5 h-3.5 mr-1.5" /> Clear Board
               </button>
             </div>
           </div>
