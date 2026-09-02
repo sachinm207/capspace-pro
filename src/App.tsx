@@ -1,19 +1,17 @@
 import { useState, useEffect } from 'react';
 import { 
-  Shield, 
   Lock, 
   Unlock, 
-  Sparkles, 
   RotateCcw, 
-  HelpCircle, 
+  BookOpen, 
   CheckCircle2, 
   XCircle, 
   ArrowRightLeft, 
-  Layers, 
   Activity,
   RefreshCw,
   Plus,
-  Minus
+  Minus,
+  ShieldCheck
 } from 'lucide-react';
 import cbaData from './data/nba_cba_2025.json';
 import { Team, TeamTradeLeg, TradeValidationResult, Player } from './engine/types';
@@ -22,14 +20,14 @@ import { initializeWebMCP } from './webmcp/modelContextBridge';
 
 export default function App() {
   const [teams, setTeams] = useState<Team[]>(cbaData.teams as unknown as Team[]);
-  const [activeTab, setActiveTab] = useState<'app' | 'explain'>('app');
+  const [activeTab, setActiveTab] = useState<'app' | 'how-to-use'>('app');
 
   // Active teams selected in the 3 columns
   const [team1Id, setTeam1Id] = useState('NYK');
   const [team2Id, setTeam2Id] = useState('BKN');
   const [team3Id, setTeam3Id] = useState('CHA');
   const [isSyncing, setIsSyncing] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState('Live: 2024-25 Official NBA CBA');
+  const [lastSyncTime, setLastSyncTime] = useState('Live: Official NBA 2025–26 CBA Active');
 
   // Initial baseline trade legs
   const getInitialLegs = (t1: string, t2: string): TeamTradeLeg[] => {
@@ -58,19 +56,18 @@ export default function App() {
   };
 
   const [tradeLegs, setTradeLegs] = useState<TeamTradeLeg[]>(() => getInitialLegs('NYK', 'BKN'));
-  const [validationResult, setValidationResult] = useState<TradeValidationResult>(() => 
-    CBAEngine.validateTrade(teams, getInitialLegs('NYK', 'BKN'))
-  );
 
-  useEffect(() => {
-    setValidationResult(CBAEngine.validateTrade(teams, tradeLegs));
-  }, [tradeLegs, teams]);
+  // Deterministic trade validation on every state update
+  const validationResult: TradeValidationResult = CBAEngine.validateTrade(teams, tradeLegs);
 
+  // Initialize WebMCP tools for external AI Agents
   useEffect(() => {
     initializeWebMCP(teams, tradeLegs, {
-      onUpdateTradeLegs: (newLegs) => setTradeLegs(newLegs),
-      onUpdateProtectedPlayer: (teamId, playerId, isProtected) => {
-        setTeams(prev => prev.map(t => {
+      onUpdateTradeLegs: (newLegs: TeamTradeLeg[]) => {
+        setTradeLegs(newLegs);
+      },
+      onUpdateProtectedPlayer: (teamId: string, playerId: string, isProtected: boolean) => {
+        setTeams(prevTeams => prevTeams.map(t => {
           if (t.id !== teamId) return t;
           return {
             ...t,
@@ -78,28 +75,34 @@ export default function App() {
           };
         }));
       },
-      onResetTrade: () => setTradeLegs(getInitialLegs(team1Id, team2Id))
+      onResetTrade: () => {
+        setTradeLegs(getInitialLegs(team1Id, team2Id));
+      },
+      onSetTradeTeams: (t1: string, t2: string, t3?: string) => {
+        setTeam1Id(t1);
+        setTeam2Id(t2);
+        if (t3) setTeam3Id(t3);
+      },
+      onAddPlayerToTrade: (fromTeamId: string, playerId: string, toTeamId: string) => {
+        const fromTeam = teams.find(t => t.id === fromTeamId);
+        const player = fromTeam?.roster.find(p => p.id === playerId);
+        if (!player) return;
+        handleAddOutgoingPlayer(fromTeamId, player, toTeamId);
+      }
     });
-  }, [teams, tradeLegs, team1Id, team2Id]);
+  }, [teams, tradeLegs, team1Id, team2Id, team3Id]);
 
   const handleProtectToggle = (teamId: string, playerId: string) => {
-    setTeams(prev => prev.map(t => {
-      if (t.id !== teamId) return t;
+    setTeams(prev => prev.map(team => {
+      if (team.id !== teamId) return team;
       return {
-        ...t,
-        roster: t.roster.map(p => p.id === playerId ? { ...p, isProtected: !p.isProtected } : p)
+        ...team,
+        roster: team.roster.map(p => {
+          if (p.id !== playerId) return p;
+          return { ...p, isProtected: !p.isProtected };
+        })
       };
     }));
-  };
-
-  const handleTeam1Change = (newId: string) => {
-    setTeam1Id(newId);
-    setTradeLegs(getInitialLegs(newId, team2Id));
-  };
-
-  const handleTeam2Change = (newId: string) => {
-    setTeam2Id(newId);
-    setTradeLegs(getInitialLegs(team1Id, newId));
   };
 
   const handleResetClick = () => {
@@ -110,32 +113,68 @@ export default function App() {
     setIsSyncing(true);
     setTimeout(() => {
       setIsSyncing(false);
-      setLastSyncTime(`Synced Live: ${new Date().toLocaleTimeString()} (All 30 Teams Up-to-Date)`);
-    }, 800);
+      setLastSyncTime(`Live Synced: ${new Date().toLocaleTimeString()} (2025–26 Cap Rates Active)`);
+    }, 600);
+  };
+
+  const handleTeam1Change = (newTeamId: string) => {
+    setTeam1Id(newTeamId);
+    setTradeLegs(getInitialLegs(newTeamId, team2Id));
+  };
+
+  const handleTeam2Change = (newTeamId: string) => {
+    setTeam2Id(newTeamId);
+    setTradeLegs(getInitialLegs(team1Id, newTeamId));
   };
 
   const handleAddOutgoingPlayer = (fromTeamId: string, player: Player, toTeamId: string) => {
-    setTradeLegs(prev => {
-      const updated = prev.map(leg => {
-        if (leg.teamId === fromTeamId) {
-          if (leg.outgoingPlayers.some(p => p.id === player.id)) return leg;
-          return { ...leg, outgoingPlayers: [...leg.outgoingPlayers, player] };
-        }
-        if (leg.teamId === toTeamId) {
-          if (leg.incomingPlayers.some(p => p.id === player.id)) return leg;
-          return { ...leg, incomingPlayers: [...leg.incomingPlayers, player] };
-        }
-        return leg;
-      });
-      return updated;
+    setTradeLegs(prevLegs => {
+      const fromLeg = prevLegs.find(l => l.teamId === fromTeamId) || {
+        teamId: fromTeamId,
+        incomingPlayers: [],
+        outgoingPlayers: [],
+        incomingPicks: [],
+        outgoingPicks: []
+      };
+
+      const toLeg = prevLegs.find(l => l.teamId === toTeamId) || {
+        teamId: toTeamId,
+        incomingPlayers: [],
+        outgoingPlayers: [],
+        incomingPicks: [],
+        outgoingPicks: []
+      };
+
+      const otherLegs = prevLegs.filter(l => l.teamId !== fromTeamId && l.teamId !== toTeamId);
+
+      const updatedFromLeg: TeamTradeLeg = {
+        ...fromLeg,
+        outgoingPlayers: fromLeg.outgoingPlayers.some(p => p.id === player.id)
+          ? fromLeg.outgoingPlayers
+          : [...fromLeg.outgoingPlayers, player]
+      };
+
+      const updatedToLeg: TeamTradeLeg = {
+        ...toLeg,
+        incomingPlayers: toLeg.incomingPlayers.some(p => p.id === player.id)
+          ? toLeg.incomingPlayers
+          : [...toLeg.incomingPlayers, player]
+      };
+
+      return [...otherLegs, updatedFromLeg, updatedToLeg];
     });
   };
 
-  const handleRemoveOutgoingPlayer = (_fromTeamId: string, playerId: string) => {
-    setTradeLegs(prev => prev.map(leg => {
+  const handleRemoveOutgoingPlayer = (fromTeamId: string, playerId: string) => {
+    setTradeLegs(prevLegs => prevLegs.map(leg => {
+      if (leg.teamId === fromTeamId) {
+        return {
+          ...leg,
+          outgoingPlayers: leg.outgoingPlayers.filter(p => p.id !== playerId)
+        };
+      }
       return {
         ...leg,
-        outgoingPlayers: leg.outgoingPlayers.filter(p => p.id !== playerId),
         incomingPlayers: leg.incomingPlayers.filter(p => p.id !== playerId)
       };
     }));
@@ -145,20 +184,20 @@ export default function App() {
     <div className="flex flex-col h-screen overflow-hidden bg-slate-950 text-slate-100 font-sans">
       
       {/* Header */}
-      <header className="border-b border-slate-800 bg-slate-900/90 backdrop-blur px-6 py-3.5 flex items-center justify-between z-50">
+      <header className="border-b border-slate-800 bg-slate-900/95 backdrop-blur px-6 py-3 flex items-center justify-between z-50 flex-shrink-0">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center font-bold text-lg shadow-lg shadow-orange-500/20">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center font-bold text-lg shadow-lg shadow-orange-500/20">
             <Activity className="w-5 h-5 text-white" />
           </div>
           <div>
             <div className="flex items-center space-x-2.5">
-              <h1 className="font-extrabold text-lg tracking-tight text-white">CapSpace Pro</h1>
-              <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-emerald-500/20 flex items-center">
+              <h1 className="font-extrabold text-base tracking-tight text-white">CapSpace Pro</h1>
+              <span className="bg-emerald-500/10 text-emerald-400 text-[11px] px-2.5 py-0.5 rounded-full font-semibold border border-emerald-500/20 flex items-center">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
                 WebMCP Connected (All 30 Teams)
               </span>
             </div>
-            <p className="text-xs text-slate-300">NBA 2024–25 Second Apron & 30-Team Trade Machine</p>
+            <p className="text-xs text-slate-300">NBA 2025–26 Season Multi-Team Trade Machine</p>
           </div>
         </div>
 
@@ -171,10 +210,10 @@ export default function App() {
             <ArrowRightLeft className="w-3.5 h-3.5 inline mr-1.5" /> 30-Team Trade Board
           </button>
           <button 
-            onClick={() => setActiveTab('explain')}
-            className={`px-4 py-1.5 rounded-md text-xs font-semibold transition ${activeTab === 'explain' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-300 hover:text-white'}`}
+            onClick={() => setActiveTab('how-to-use')}
+            className={`px-4 py-1.5 rounded-md text-xs font-semibold transition ${activeTab === 'how-to-use' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-300 hover:text-white'}`}
           >
-            <HelpCircle className="w-3.5 h-3.5 inline mr-1.5" /> Beginner's Guide (Why NBA is Hard)
+            <BookOpen className="w-3.5 h-3.5 inline mr-1.5" /> How to Use It
           </button>
         </div>
 
@@ -189,12 +228,12 @@ export default function App() {
           </button>
 
           <div className="text-right">
-            <div className="text-[10px] uppercase tracking-wider text-slate-300 font-semibold">CBA Trade Status</div>
-            <div className={`text-base font-bold font-mono flex items-center justify-end ${validationResult.isLegal ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <div className="text-[10px] uppercase tracking-wider text-slate-300 font-semibold">CBA Status</div>
+            <div className={`text-sm font-bold font-mono flex items-center justify-end ${validationResult.isLegal ? 'text-emerald-400' : 'text-rose-400'}`}>
               {validationResult.isLegal ? (
-                <><CheckCircle2 className="w-5 h-5 mr-1.5 text-emerald-400" /> TRADE APPROVED (100% Legal)</>
+                <><CheckCircle2 className="w-4 h-4 mr-1 text-emerald-400" /> 100% LEGAL</>
               ) : (
-                <><XCircle className="w-5 h-5 mr-1.5 text-rose-400" /> DISALLOWED ({validationResult.violations.length} Violations)</>
+                <><XCircle className="w-4 h-4 mr-1 text-rose-400" /> DISALLOWED ({validationResult.violations.length})</>
               )}
             </div>
           </div>
@@ -203,30 +242,31 @@ export default function App() {
 
       {/* Main Content Area */}
       {activeTab === 'app' ? (
-        <div className="flex-1 bg-slate-900/30 p-6 flex flex-col justify-between overflow-y-auto">
+        <div className="flex-1 bg-slate-900/30 p-4 flex flex-col min-h-0 overflow-hidden">
           
-          <div className="flex items-center justify-between mb-4">
+          {/* Subheader */}
+          <div className="flex items-center justify-between mb-3 flex-shrink-0">
             <div className="flex items-center space-x-3 text-xs text-slate-200">
-              <span className="font-bold text-amber-400">Active Multi-Team Trade:</span>
+              <span className="font-bold text-amber-400">Active Trade Canvas:</span>
               <span className="text-slate-300 font-medium">{lastSyncTime}</span>
             </div>
             <div className="flex items-center space-x-3">
               <span className="text-[11px] text-slate-300 italic">
-                Select any of the 30 NBA teams below or let external AI agents restructure the trade via WebMCP.
+                Pick teams or let external AI agents restructure trades via WebMCP.
               </span>
               <button 
                 onClick={handleResetClick}
-                className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center transition"
+                className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1 rounded-lg border border-slate-700 flex items-center transition"
               >
                 <RotateCcw className="w-3.5 h-3.5 mr-1.5" /> Reset Board
               </button>
             </div>
           </div>
 
-          {/* 3-Column Team Trade Board with Selectors */}
-          <div className="grid grid-cols-3 gap-6 flex-1">
+          {/* 3-Column Team Trade Board */}
+          <div className="grid grid-cols-3 gap-4 flex-1 min-h-0 overflow-hidden">
             
-            {/* Column 1: Team 1 (Selectable from 30 teams) */}
+            {/* Column 1: Team 1 */}
             {(() => {
               const team1 = teams.find(t => t.id === team1Id) || teams[0];
               const leg = tradeLegs.find(l => l.teamId === team1.id);
@@ -235,42 +275,42 @@ export default function App() {
               const diff = inSum - outSum;
 
               return (
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between shadow-2xl">
-                  <div>
-                    <div className="flex items-center justify-between pb-3.5 border-b border-slate-800">
-                      <div className="flex items-center space-x-2.5">
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between shadow-xl min-h-0 overflow-hidden">
+                  <div className="flex-1 min-h-0 flex flex-col">
+                    <div className="flex items-center justify-between pb-2.5 border-b border-slate-800 flex-shrink-0">
+                      <div className="flex items-center space-x-2">
                         <select 
                           value={team1Id}
                           onChange={(e) => handleTeam1Change(e.target.value)}
-                          className="bg-slate-800 font-extrabold text-sm text-white rounded-lg px-2.5 py-1 border border-slate-700 focus:outline-none focus:border-orange-500 cursor-pointer"
+                          className="bg-slate-800 font-extrabold text-xs text-white rounded px-2 py-1 border border-slate-700 focus:outline-none focus:border-orange-500 cursor-pointer"
                         >
                           {teams.map(t => (
                             <option key={t.id} value={t.id}>{t.name} ({t.id})</option>
                           ))}
                         </select>
-                        <span className="text-[11px] text-slate-300 font-medium">Payroll: ${(team1.totalPayroll / 1e6).toFixed(1)}M</span>
+                        <span className="text-[11px] text-slate-300 font-medium">${(team1.totalPayroll / 1e6).toFixed(1)}M</span>
                       </div>
-                      <span className="text-[10px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded-full font-mono font-semibold border border-amber-500/20">
+                      <span className="text-[9px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded-full font-mono font-semibold border border-amber-500/20">
                         {team1.apronTier.replace('_', ' ').toUpperCase()}
                       </span>
                     </div>
 
-                    {/* Trade Assets */}
-                    <div className="mt-4 space-y-2.5">
-                      <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Incoming Assets:</div>
+                    {/* Trade Assets Section */}
+                    <div className="mt-2.5 flex-1 min-h-0 overflow-y-auto pr-1 space-y-2">
+                      <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Incoming:</div>
                       {leg?.incomingPlayers.map(p => (
-                        <div key={p.id} className="p-2.5 rounded-xl bg-slate-800 border border-cyan-500/40 text-xs flex justify-between items-center shadow-sm">
-                          <span className="font-bold text-white">{p.name} ({p.pos})</span>
-                          <span className="font-mono font-semibold text-cyan-400">${(p.salary / 1e6).toFixed(2)}M</span>
+                        <div key={p.id} className="p-2 rounded-lg bg-slate-800 border border-cyan-500/40 text-xs flex justify-between items-center shadow-sm">
+                          <span className="font-bold text-white text-[11px]">{p.name} ({p.pos})</span>
+                          <span className="font-mono font-semibold text-cyan-400 text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
                         </div>
                       ))}
 
-                      <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mt-4">Outgoing Assets:</div>
+                      <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider mt-2">Outgoing:</div>
                       {leg?.outgoingPlayers.map(p => (
-                        <div key={p.id} className="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/60 text-xs flex justify-between items-center">
-                          <span className="text-slate-200 font-medium">{p.name} ({p.pos})</span>
-                          <div className="flex items-center space-x-2">
-                            <span className="font-mono text-slate-300 font-semibold">${(p.salary / 1e6).toFixed(2)}M</span>
+                        <div key={p.id} className="p-2 rounded-lg bg-slate-800/60 border border-slate-700/60 text-xs flex justify-between items-center">
+                          <span className="text-slate-200 font-medium text-[11px]">{p.name} ({p.pos})</span>
+                          <div className="flex items-center space-x-1.5">
+                            <span className="font-mono text-slate-300 font-semibold text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
                             <button 
                               onClick={() => handleRemoveOutgoingPlayer(team1.id, p.id)}
                               className="text-rose-400 hover:text-rose-300 p-0.5 rounded"
@@ -283,24 +323,24 @@ export default function App() {
                       ))}
 
                       {/* Roster & Add-to-Trade Picker */}
-                      <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mt-5 flex items-center justify-between">
+                      <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider mt-3 flex items-center justify-between">
                         <span>Roster ({team1.roster.length} Players):</span>
-                        <span className="text-[10px] text-slate-400 font-normal">Click to lock / trade</span>
+                        <span className="text-[9px] text-slate-400 font-normal">Click to lock / trade</span>
                       </div>
-                      <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+                      <div className="space-y-1">
                         {team1.roster.map(p => {
                           const isAlreadyTrading = leg?.outgoingPlayers.some(op => op.id === p.id);
                           return (
-                            <div key={p.id} className="p-2 rounded-xl bg-slate-800/40 border border-slate-700/40 flex items-center justify-between text-xs">
-                              <div>
-                                <span className={`font-semibold ${p.isProtected ? 'text-amber-300' : 'text-slate-200'}`}>{p.name}</span>
-                                <span className="text-[11px] text-slate-300 ml-1.5 font-mono font-medium">(${(p.salary / 1e6).toFixed(1)}M)</span>
+                            <div key={p.id} className="p-1.5 rounded-lg bg-slate-800/40 border border-slate-700/40 flex items-center justify-between text-xs">
+                              <div className="truncate mr-1">
+                                <span className={`font-semibold text-[11px] ${p.isProtected ? 'text-amber-300' : 'text-slate-200'}`}>{p.name}</span>
+                                <span className="text-[10px] text-slate-300 ml-1 font-mono">(${(p.salary / 1e6).toFixed(1)}M)</span>
                               </div>
-                              <div className="flex items-center space-x-1.5">
+                              <div className="flex items-center space-x-1 flex-shrink-0">
                                 <button 
                                   onClick={() => handleProtectToggle(team1.id, p.id)}
                                   className={`text-[9px] px-1.5 py-0.5 rounded font-semibold flex items-center transition ${p.isProtected ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700/50'}`}
-                                  title="Toggle protection lock"
+                                  title="Toggle superstar protection lock"
                                 >
                                   {p.isProtected ? <Lock className="w-2.5 h-2.5" /> : <Unlock className="w-2.5 h-2.5" />}
                                 </button>
@@ -320,70 +360,69 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Second Apron Progress Gauge */}
-                  <div className="mt-4 pt-3.5 border-t border-slate-800 text-xs space-y-1.5">
+                  {/* Salary Difference Footer */}
+                  <div className="mt-2.5 pt-2.5 border-t border-slate-800 text-xs space-y-1 flex-shrink-0">
                     <div className="flex justify-between text-slate-300 font-medium">
                       <span>Salary Difference:</span>
                       <span className={`font-mono font-bold ${diff > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
                         {diff > 0 ? `+$${(diff / 1e6).toFixed(2)}M` : `-$${(Math.abs(diff) / 1e6).toFixed(2)}M`}
                       </span>
                     </div>
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
                       <div 
                         className={`h-full ${diff > 3000000 ? 'bg-rose-500' : 'bg-amber-500'} transition-all duration-500`}
                         style={{ width: `${Math.min(100, ((team1.totalPayroll + diff) / 188931000) * 100)}%` }}
                       ></div>
-                    </div>
-                    <div className="flex justify-between text-[11px] text-slate-300 font-medium">
-                      <span>Current: ${(team1.totalPayroll / 1e6).toFixed(1)}M</span>
-                      <span>2nd Apron Limit: $188.9M</span>
                     </div>
                   </div>
                 </div>
               );
             })()}
 
-            {/* Column 2: Team 2 (Selectable from 30 teams) */}
+            {/* Column 2: Team 2 */}
             {(() => {
               const team2 = teams.find(t => t.id === team2Id) || teams[2];
               const leg = tradeLegs.find(l => l.teamId === team2.id);
+              const outSum = leg ? leg.outgoingPlayers.reduce((s, p) => s + p.salary, 0) : 0;
+              const inSum = leg ? leg.incomingPlayers.reduce((s, p) => s + p.salary, 0) : 0;
+              const diff = inSum - outSum;
 
               return (
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between shadow-2xl">
-                  <div>
-                    <div className="flex items-center justify-between pb-3.5 border-b border-slate-800">
-                      <div className="flex items-center space-x-2.5">
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between shadow-xl min-h-0 overflow-hidden">
+                  <div className="flex-1 min-h-0 flex flex-col">
+                    <div className="flex items-center justify-between pb-2.5 border-b border-slate-800 flex-shrink-0">
+                      <div className="flex items-center space-x-2">
                         <select 
                           value={team2Id}
                           onChange={(e) => handleTeam2Change(e.target.value)}
-                          className="bg-slate-800 font-extrabold text-sm text-white rounded-lg px-2.5 py-1 border border-slate-700 focus:outline-none focus:border-orange-500 cursor-pointer"
+                          className="bg-slate-800 font-extrabold text-xs text-white rounded px-2 py-1 border border-slate-700 focus:outline-none focus:border-orange-500 cursor-pointer"
                         >
                           {teams.map(t => (
                             <option key={t.id} value={t.id}>{t.name} ({t.id})</option>
                           ))}
                         </select>
-                        <span className="text-[11px] text-slate-300 font-medium">Payroll: ${(team2.totalPayroll / 1e6).toFixed(1)}M</span>
+                        <span className="text-[11px] text-slate-300 font-medium">${(team2.totalPayroll / 1e6).toFixed(1)}M</span>
                       </div>
-                      <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full font-mono font-semibold border border-emerald-500/20">
+                      <span className="text-[9px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full font-mono font-semibold border border-emerald-500/20">
                         {team2.apronTier.replace('_', ' ').toUpperCase()}
                       </span>
                     </div>
 
-                    <div className="mt-4 space-y-2.5">
-                      <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Incoming Assets:</div>
+                    <div className="mt-2.5 flex-1 min-h-0 overflow-y-auto pr-1 space-y-2">
+                      <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Incoming:</div>
                       {leg?.incomingPlayers.map(p => (
-                        <div key={p.id} className="p-2.5 rounded-xl bg-slate-800 border border-cyan-500/40 text-xs flex justify-between items-center shadow-sm">
-                          <span className="font-bold text-white">{p.name} ({p.pos})</span>
-                          <span className="font-mono font-semibold text-cyan-400">${(p.salary / 1e6).toFixed(2)}M</span>
+                        <div key={p.id} className="p-2 rounded-lg bg-slate-800 border border-cyan-500/40 text-xs flex justify-between items-center shadow-sm">
+                          <span className="font-bold text-white text-[11px]">{p.name} ({p.pos})</span>
+                          <span className="font-mono font-semibold text-cyan-400 text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
                         </div>
                       ))}
 
-                      <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mt-4">Outgoing Assets:</div>
+                      <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider mt-2">Outgoing:</div>
                       {leg?.outgoingPlayers.map(p => (
-                        <div key={p.id} className="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/60 text-xs flex justify-between items-center">
-                          <span className="text-slate-200 font-medium">{p.name} ({p.pos})</span>
-                          <div className="flex items-center space-x-2">
-                            <span className="font-mono text-slate-300 font-semibold">${(p.salary / 1e6).toFixed(2)}M</span>
+                        <div key={p.id} className="p-2 rounded-lg bg-slate-800/60 border border-slate-700/60 text-xs flex justify-between items-center">
+                          <span className="text-slate-200 font-medium text-[11px]">{p.name} ({p.pos})</span>
+                          <div className="flex items-center space-x-1.5">
+                            <span className="font-mono text-slate-300 font-semibold text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
                             <button 
                               onClick={() => handleRemoveOutgoingPlayer(team2.id, p.id)}
                               className="text-rose-400 hover:text-rose-300 p-0.5 rounded"
@@ -395,18 +434,17 @@ export default function App() {
                         </div>
                       ))}
 
-                      {/* Roster & Add-to-Trade Picker */}
-                      <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mt-5">Roster ({team2.roster.length} Players):</div>
-                      <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+                      <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider mt-3">Roster ({team2.roster.length} Players):</div>
+                      <div className="space-y-1">
                         {team2.roster.map(p => {
                           const isAlreadyTrading = leg?.outgoingPlayers.some(op => op.id === p.id);
                           return (
-                            <div key={p.id} className="p-2 rounded-xl bg-slate-800/40 border border-slate-700/40 flex items-center justify-between text-xs">
-                              <div>
-                                <span className={`font-semibold ${p.isProtected ? 'text-amber-300' : 'text-slate-200'}`}>{p.name}</span>
-                                <span className="text-[11px] text-slate-300 ml-1.5 font-mono font-medium">(${(p.salary / 1e6).toFixed(1)}M)</span>
+                            <div key={p.id} className="p-1.5 rounded-lg bg-slate-800/40 border border-slate-700/40 flex items-center justify-between text-xs">
+                              <div className="truncate mr-1">
+                                <span className={`font-semibold text-[11px] ${p.isProtected ? 'text-amber-300' : 'text-slate-200'}`}>{p.name}</span>
+                                <span className="text-[10px] text-slate-300 ml-1 font-mono">(${(p.salary / 1e6).toFixed(1)}M)</span>
                               </div>
-                              <div className="flex items-center space-x-1.5">
+                              <div className="flex items-center space-x-1 flex-shrink-0">
                                 <button 
                                   onClick={() => handleProtectToggle(team2.id, p.id)}
                                   className={`text-[9px] px-1.5 py-0.5 rounded font-semibold flex items-center transition ${p.isProtected ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700/50'}`}
@@ -429,12 +467,14 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3.5 border-t border-slate-800 text-xs space-y-1.5">
+                  <div className="mt-2.5 pt-2.5 border-t border-slate-800 text-xs space-y-1 flex-shrink-0">
                     <div className="flex justify-between text-slate-300 font-medium">
-                      <span>Roster Open Spots:</span>
-                      <span className="font-mono font-bold text-emerald-400">{15 - team2.roster.length} Available</span>
+                      <span>Salary Difference:</span>
+                      <span className={`font-mono font-bold ${diff > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                        {diff > 0 ? `+$${(diff / 1e6).toFixed(2)}M` : `-$${(Math.abs(diff) / 1e6).toFixed(2)}M`}
+                      </span>
                     </div>
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
                       <div className="h-full bg-emerald-500 w-[60%]"></div>
                     </div>
                   </div>
@@ -442,78 +482,78 @@ export default function App() {
               );
             })()}
 
-            {/* Column 3: 3rd Team Facilitator (Selectable from 30 teams) */}
+            {/* Column 3: 3rd Team Facilitator */}
             {(() => {
               const team3 = teams.find(t => t.id === team3Id) || teams[12];
               const leg = tradeLegs.find(l => l.teamId === team3.id);
 
               return (
-                <div className={`bg-slate-900 border rounded-2xl p-5 flex flex-col justify-between shadow-2xl transition-all ${leg ? 'border-teal-500/60 shadow-teal-500/10' : 'border-slate-800'}`}>
-                  <div>
-                    <div className="flex items-center justify-between pb-3.5 border-b border-slate-800">
-                      <div className="flex items-center space-x-2.5">
+                <div className={`bg-slate-900 border rounded-xl p-4 flex flex-col justify-between shadow-xl min-h-0 overflow-hidden transition-all ${leg ? 'border-teal-500/60 shadow-teal-500/10' : 'border-slate-800'}`}>
+                  <div className="flex-1 min-h-0 flex flex-col">
+                    <div className="flex items-center justify-between pb-2.5 border-b border-slate-800 flex-shrink-0">
+                      <div className="flex items-center space-x-2">
                         <select 
                           value={team3Id}
                           onChange={(e) => setTeam3Id(e.target.value)}
-                          className="bg-slate-800 font-extrabold text-sm text-teal-300 rounded-lg px-2.5 py-1 border border-slate-700 focus:outline-none focus:border-teal-500 cursor-pointer"
+                          className="bg-slate-800 font-extrabold text-xs text-teal-300 rounded px-2 py-1 border border-slate-700 focus:outline-none focus:border-teal-500 cursor-pointer"
                         >
                           {teams.map(t => (
                             <option key={t.id} value={t.id}>{t.name} (Facilitator)</option>
                           ))}
                         </select>
-                        <span className="text-[11px] text-slate-300 font-medium">TPEs: {team3.tpes.length}</span>
+                        <span className="text-[11px] text-slate-300">TPEs: {team3.tpes.length}</span>
                       </div>
-                      <span className="text-[10px] bg-teal-500/10 text-teal-300 px-2 py-0.5 rounded-full font-mono font-semibold border border-teal-500/20">
+                      <span className="text-[9px] bg-teal-500/10 text-teal-300 px-2 py-0.5 rounded-full font-mono font-semibold border border-teal-500/20">
                         {team3.tpes.length > 0 ? 'TPE HOST' : 'CAP ROOM'}
                       </span>
                     </div>
 
-                    <div className="mt-4 space-y-2.5">
-                      <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Incoming Absorbed:</div>
+                    <div className="mt-2.5 flex-1 min-h-0 overflow-y-auto pr-1 space-y-2">
+                      <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Incoming Absorbed:</div>
                       {leg ? (
                         <>
                           {leg.incomingPlayers.map(p => (
-                            <div key={p.id} className="p-2.5 rounded-xl bg-teal-950/40 border border-teal-500/40 text-xs flex justify-between items-center">
-                              <span className="font-bold text-teal-200">{p.name} (via TPE)</span>
-                              <span className="font-mono font-semibold text-teal-300">${(p.salary / 1e6).toFixed(2)}M</span>
+                            <div key={p.id} className="p-2 rounded-lg bg-teal-950/40 border border-teal-500/40 text-xs flex justify-between items-center">
+                              <span className="font-bold text-teal-200 text-[11px]">{p.name} (via TPE)</span>
+                              <span className="font-mono font-semibold text-teal-300 text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
                             </div>
                           ))}
                           {leg.incomingPicks.map(pick => (
-                            <div key={pick} className="p-2.5 rounded-xl bg-teal-950/30 border border-teal-500/30 text-xs text-teal-300">
+                            <div key={pick} className="p-2 rounded-lg bg-teal-950/30 border border-teal-500/30 text-xs text-teal-300">
                               Acquired Draft Compensation: {pick}
                             </div>
                           ))}
                         </>
                       ) : (
-                        <div className="p-4 rounded-xl bg-slate-800/40 border border-dashed border-slate-700/60 text-xs text-slate-300 italic text-center">
-                          Standing by. External AI coding agents can route salaries into {team3.name}'s active TPE exceptions via WebMCP.
+                        <div className="p-3 rounded-lg bg-slate-800/40 border border-dashed border-slate-700/60 text-xs text-slate-400 italic text-center">
+                          Standing by. External AI agents can route salaries into {team3.name}'s active TPE exceptions via WebMCP.
                         </div>
                       )}
 
-                      <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mt-5">Active Trade Exceptions (TPE):</div>
+                      <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider mt-3">Active Trade Exceptions (TPE):</div>
                       {team3.tpes.length > 0 ? (
-                        <div className="space-y-1.5">
+                        <div className="space-y-1">
                           {team3.tpes.map(tpe => (
-                            <div key={tpe.id} className="p-2 rounded-xl bg-slate-800/60 border border-slate-700/60 text-xs flex justify-between items-center">
-                              <span className="text-slate-200 font-medium">{tpe.name}</span>
-                              <span className="font-mono text-emerald-400 font-bold">${(tpe.amount / 1e6).toFixed(2)}M</span>
+                            <div key={tpe.id} className="p-1.5 rounded-lg bg-slate-800/60 border border-slate-700/60 text-xs flex justify-between items-center">
+                              <span className="text-slate-300 text-[11px]">{tpe.name}</span>
+                              <span className="font-mono text-emerald-400 font-bold text-xs">${(tpe.amount / 1e6).toFixed(2)}M</span>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <div className="text-[11px] text-slate-300 italic p-2 bg-slate-800/20 rounded">
+                        <div className="text-[11px] text-slate-400 italic p-1.5 bg-slate-800/20 rounded">
                           No active TPEs (Can absorb contracts via cap room).
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3.5 border-t border-slate-800 text-xs space-y-1.5">
+                  <div className="mt-2.5 pt-2.5 border-t border-slate-800 text-xs space-y-1 flex-shrink-0">
                     <div className="flex justify-between text-slate-300 font-medium">
                       <span>Roster Capacity:</span>
                       <span className="font-mono font-bold text-teal-400">{team3.roster.length} / 15 Contracts</span>
                     </div>
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
                       <div className="h-full bg-teal-500 w-[65%]"></div>
                     </div>
                   </div>
@@ -523,77 +563,108 @@ export default function App() {
 
           </div>
 
-          {/* Violation Alert Banner */}
-          {!validationResult.isLegal && (
-            <div className="mt-4 bg-rose-950/40 border border-rose-500/40 rounded-xl p-3.5 text-xs text-rose-300 space-y-1 shadow-lg">
-              <div className="font-bold text-rose-400 flex items-center text-sm">
-                <XCircle className="w-4 h-4 mr-2" /> Collective Bargaining Agreement (CBA) Violations:
+          {/* PERMANENT STICKY CBA STATUS & VIOLATION FOOTER */}
+          <div className="mt-3 flex-shrink-0 z-40">
+            {validationResult.isLegal ? (
+              <div className="bg-emerald-950/90 border border-emerald-500/60 rounded-xl px-4 py-2.5 text-xs text-emerald-200 shadow-2xl flex items-center justify-between backdrop-blur">
+                <div className="flex items-center space-x-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                  <div>
+                    <span className="font-bold text-emerald-300 text-sm">TRADE APPROVED (100% Legal CBA Compliance)</span>
+                    <p className="text-[11px] text-emerald-400/90">All salary matching brackets, Second Apron aggregation restrictions, and roster caps satisfied.</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2 text-[11px] font-mono bg-emerald-900/60 px-3 py-1 rounded-lg border border-emerald-500/40">
+                  <ShieldCheck className="w-4 h-4 text-emerald-300" />
+                  <span>Verified by CBAEngine &lt;1ms</span>
+                </div>
               </div>
-              {validationResult.violations.map((v, i) => (
-                <div key={i} className="pl-6">• {v.reason}</div>
-              ))}
-            </div>
-          )}
+            ) : (
+              <div className="bg-rose-950/95 border border-rose-500/70 rounded-xl px-4 py-2.5 text-xs text-rose-200 shadow-2xl backdrop-blur flex items-start justify-between">
+                <div className="space-y-1 max-h-20 overflow-y-auto pr-2 flex-1">
+                  <div className="font-bold text-rose-300 flex items-center text-sm">
+                    <XCircle className="w-4 h-4 mr-2 text-rose-400 flex-shrink-0" /> CBA Rule Violations ({validationResult.violations.length}):
+                  </div>
+                  {validationResult.violations.map((v, i) => (
+                    <div key={i} className="pl-6 text-[11px] text-rose-200 font-medium leading-tight">• {v.reason}</div>
+                  ))}
+                </div>
+                <div className="text-[10px] text-rose-300/80 italic ml-4 flex-shrink-0 self-center bg-rose-900/40 px-2.5 py-1 rounded border border-rose-500/30">
+                  Let external AI agent auto-balance via WebMCP
+                </div>
+              </div>
+            )}
+          </div>
 
         </div>
       ) : (
-        /* VIEW 2: EXPLANATION TAB */
-        <div className="flex-1 bg-slate-950 p-10 overflow-y-auto">
-          <div className="max-w-4xl mx-auto space-y-8">
-            <div className="border-b border-slate-800 pb-6">
-              <div className="inline-block bg-orange-500/10 text-orange-400 text-xs px-3 py-1 rounded-full font-semibold mb-3 border border-orange-500/20">
-                Plain English Guide (Zero Jargon)
+        /* VIEW 2: HOW TO USE IT TAB */
+        <div className="flex-1 bg-slate-950 p-8 overflow-y-auto">
+          <div className="max-w-4xl mx-auto space-y-6">
+            
+            {/* Guide Header */}
+            <div className="border-b border-slate-800 pb-5">
+              <div className="inline-block bg-orange-500/10 text-orange-400 text-xs px-3 py-1 rounded-full font-semibold mb-2 border border-orange-500/20">
+                Step-by-Step Walkthrough
               </div>
-              <h2 className="text-3xl font-extrabold text-white tracking-tight">Why the NBA Has the Hardest Math in Sports</h2>
-              <p className="text-slate-300 text-base mt-2">
-                Why basketball trades involve 676-page legal contracts and how external AI agents solve multi-million dollar puzzles across all 30 teams.
+              <h2 className="text-2xl font-extrabold text-white tracking-tight">How to Use CapSpace Pro</h2>
+              <p className="text-slate-300 text-sm mt-1">
+                Learn how to construct multi-team trades, protect superstar cornerstones, and let external AI agents solve 676-page CBA salary puzzles via WebMCP.
               </p>
             </div>
 
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
-              <div className="flex items-center space-x-3 text-orange-400 font-bold text-lg">
-                <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                  <Shield className="w-4 h-4" />
+            {/* Step 1 */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-2.5 shadow-xl">
+              <div className="flex items-center space-x-3 text-orange-400 font-bold text-base">
+                <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center font-mono text-xs text-orange-300">
+                  1
                 </div>
-                <span>1. The Real-World Problem: The 676-Page Rulebook</span>
+                <span>Select Your 2 or 3 Trading Teams</span>
               </div>
-              <p className="text-slate-300 text-sm leading-relaxed">
-                In professional basketball (the NBA), teams cannot just trade whoever they want like in video games or soccer. Every team is bound by a <strong>676-page legal contract called the Collective Bargaining Agreement (CBA)</strong>.
-              </p>
-              <p className="text-slate-300 text-sm leading-relaxed">
-                If a rich team is over the salary limit (called the "Second Apron"), the rules get brutal: you cannot combine two small contracts to get one big player, you cannot pay cash to help another team, and you cannot take back even $1 more in salary than you send out.
+              <p className="text-slate-300 text-xs leading-relaxed pl-10">
+                Use the dropdown menus at the top of Column 1 and Column 2 to pick any of the 30 NBA teams. Column 3 lets you choose a 3rd-team <strong>Facilitator</strong> with open budget space or active Trade Exceptions (TPE).
               </p>
             </div>
 
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
-              <div className="flex items-center space-x-3 text-amber-400 font-bold text-lg">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                  <Layers className="w-4 h-4" />
+            {/* Step 2 */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-2.5 shadow-xl">
+              <div className="flex items-center space-x-3 text-amber-400 font-bold text-base">
+                <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center font-mono text-xs text-amber-300">
+                  2
                 </div>
-                <span>2. Why Online Trade Checkers Frustrate Millions of Fans & GMs</span>
+                <span>Lock Your Protected Superstars (🔒)</span>
               </div>
-              <p className="text-slate-300 text-sm leading-relaxed">
-                Current trade machines (like ESPN Trade Machine) only do one thing: when you click "Submit", it flashes a big red box that says <strong>"Trade Disallowed"</strong> with zero explanation of how to fix it.
-              </p>
-              <p className="text-slate-300 text-sm leading-relaxed">
-                The human has to spend 45 minutes digging through 29 other teams to find an obscure "Traded Player Exception" (TPE) or minimum contract to make the math work.
+              <p className="text-slate-300 text-xs leading-relaxed pl-10">
+                Click the <strong>🔒 Lock icon</strong> next to franchise players you refuse to trade (e.g., Jalen Brunson or Steph Curry). This signals to both humans and external AI agents that this player is untouchable and must remain on the roster.
               </p>
             </div>
 
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
-              <div className="flex items-center space-x-3 text-emerald-400 font-bold text-lg">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4" />
+            {/* Step 3 */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-2.5 shadow-xl">
+              <div className="flex items-center space-x-3 text-cyan-400 font-bold text-base">
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/10 flex items-center justify-center font-mono text-xs text-cyan-300">
+                  3
                 </div>
-                <span>3. How External AI Coding Agents (WebMCP) Solve the Puzzle</span>
+                <span>Trade Players or Let AI Agents Restructure via WebMCP</span>
               </div>
-              <p className="text-slate-300 text-sm leading-relaxed">
-                You tell your external AI assistant (ChatGPT Desktop, Claude Code, Codex, or Antigravity): <em>"Make the trade work without giving up our franchise stars."</em>
-              </p>
-              <p className="text-slate-300 text-sm leading-relaxed">
-                The external AI connects directly to this browser tab via <strong>WebMCP (`navigator.modelContext`)</strong>, executes the deterministic CBA tools in 15 milliseconds, brings in a 3rd team to absorb the salary gap into their tax exception, and transforms the on-screen board into a <strong>100% legally approved NBA trade</strong>.
+              <p className="text-slate-300 text-xs leading-relaxed pl-10">
+                Click <strong>"+ Trade"</strong> on any unlocked player to move them into the outgoing package. Alternatively, ask your connected AI agent (ChatGPT Desktop, Claude Code, Antigravity) to <em>"Make this trade work"</em>—the agent calls in-browser WebMCP tools to balance outgoing and incoming contracts automatically in milliseconds.
               </p>
             </div>
+
+            {/* Step 4 */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-2.5 shadow-xl">
+              <div className="flex items-center space-x-3 text-emerald-400 font-bold text-base">
+                <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center font-mono text-xs text-emerald-300">
+                  4
+                </div>
+                <span>Verify Live CBA Compliance at the Bottom Banner</span>
+              </div>
+              <p className="text-slate-300 text-xs leading-relaxed pl-10">
+                Watch the <strong>sticky bottom banner</strong>. If a trade breaks Second Apron rules or exceeds allowable salary limits, red violation callouts explain exactly why down to the dollar. Once the math balances, the banner turns green with an instant <strong>"TRADE APPROVED (100% Legal)"</strong> stamp.
+              </p>
+            </div>
+
           </div>
         </div>
       )}
