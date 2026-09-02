@@ -64,7 +64,8 @@ CapSpace Pro turns the trade machine from a **dumb calculator that only says "NO
 | **Salary Matching** | Exact piecewise mathematical formula dictating how much incoming contract money a team can accept. | Strict equal-value exchange rule. |
 | **TPE (Trade Exception)** | A temporary financial credit coupon created when a team trades away a player without taking one back. | Store credit / gift voucher. |
 | **Facilitator (3rd Team)** | A 3rd team with spare budget space that steps into a trade to absorb extra contract money in exchange for draft picks. | A co-signer / mediator. |
-| **Protected Player** (🔒 Lock) | Superstars (like Steph Curry) marked as "untouchable" so the solver never trades them away. | Prized family heirloom. |
+| **Protected Player** (🔒 Roster Lock) | Superstars (like Steph Curry or Nikola Jokic) marked as "untouchable" so the solver never trades them away. | Prized family heirloom. |
+| **In-Trade Anchor** (🔒 Trade Card Lock) | Core traded player pinned as non-negotiable (AI must build the deal around them and only adjust flexible bench filler). | The cornerstone centerpiece. |
 | **Roster Limit** | Maximum 15 players allowed on a team. (The app displays the top 6–9 core rotation players representing 85–90% of payroll in a scrollable box for clean UX). | 15 seats on the team bus. |
 
 ---
@@ -72,7 +73,8 @@ CapSpace Pro turns the trade machine from a **dumb calculator that only says "NO
 ## 5. How to Use CapSpace Pro in 3 Easy Steps
 
 1. **Pick the Teams:** Select 2 or 3 teams you want to see make a trade on the board.
-2. **Lock Your Superstars:** Click the 🔒 lock icon next to any player you refuse to trade.
-3. **Solve or Adjust:** 
-   * Click **"Trade"** on players you want to move, or
-   * Let the app automatically find a 3rd facilitator team and compute a 100% legally approved trade where all contracts match to the exact dollar.
+2. **Lock Your Superstars & Anchors:** 
+   * Click 🔒 next to franchise players on the roster to keep them untouchable.
+   * Click 🔒 on traded players in the Incoming/Outgoing cards to lock them as non-negotiable core pieces.
+3. **Solve or Auto-Balance:** 
+   * Click **"⚡ Auto-Balance Deal"** to let the engine automatically find 3rd-team facilitators and compute a 100% legally approved trade where all contracts match down to the exact dollar!

@@ -28,7 +28,7 @@
 
 ---
 
-## 2. CBA Financial & Regulatory Constants (2024–25 Season)
+## 2. CBA Financial & Regulatory Constants (2025–26 Season)
 
 All trade calculations adhere strictly to the 2023–2030 NBA Collective Bargaining Agreement:
 
@@ -57,8 +57,17 @@ All trade calculations adhere strictly to the 2023–2030 NBA Collective Bargain
 ## 3. WebMCP Protocol & Agent Execution Assumptions
 
 1. **Protocol Standard:** Tools are registered on `navigator.modelContext.registerTool` (and `document.modelContext.registerTool`) with typed JSON schemas and `readOnlyHint` attributes.
-2. **Execution Context:** In native WebMCP environments (ChatGPT Desktop, Google Chrome with `#enable-webmcp-testing`), tools execute within the browser tab sandbox with zero filesystem or terminal access.
-3. **Two-Way Synchronization:** Tool execution by external agents mutates the reactive React trade board state in real time.
+2. **8 Native WebMCP Tools:**
+   * `list_all_teams`
+   * `get_team_cap_status`
+   * `validate_cba_trade`
+   * `find_facilitator_teams`
+   * `set_player_protection`
+   * `route_salary_to_tpe`
+   * `auto_balance_trade`
+   * `reset_trade`
+3. **Execution Context:** In native WebMCP environments (ChatGPT Desktop, Google Chrome with `#enable-webmcp-testing`), tools execute within the browser tab sandbox with zero filesystem or terminal access.
+4. **Two-Way Synchronization:** Tool execution by external agents mutates the reactive React trade board state in real time.
 
 ---
 
