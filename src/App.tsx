@@ -223,7 +223,6 @@ export default function App() {
             <button 
               onClick={handleLiveSync}
               className="flex items-center space-x-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition cursor-pointer"
-              title="Syncs latest official 2025–26 NBA CBA contract feeds, active luxury tax thresholds, and trade exceptions into memory."
             >
               <RefreshCw className={`w-3.5 h-3.5 text-cyan-400 ${isSyncing ? 'animate-spin' : ''}`} />
               <span>Sync Live Cap Data</span>
