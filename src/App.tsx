@@ -22,7 +22,7 @@ import { initializeWebMCP } from './webmcp/modelContextBridge';
 
 export default function App() {
   const [teams, setTeams] = useState<Team[]>(cbaData.teams as unknown as Team[]);
-  const [activeTab, setActiveTab] = useState<'app' | 'how-to-use'>('app');
+  const [activeTab, setActiveTab] = useState<'app' | 'how-to-use' | 'how-to-use-webmcp'>('app');
 
   // Active teams selected in the 3 columns
   const [team1Id, setTeam1Id] = useState('NYK');
@@ -321,18 +321,24 @@ export default function App() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex bg-slate-800/80 p-1 rounded-lg border border-slate-700/50">
+        <div className="flex bg-slate-800/80 p-1 rounded-lg border border-slate-700/50 space-x-1">
           <button 
             onClick={() => setActiveTab('app')}
-            className={`px-4 py-1.5 rounded-md text-xs font-semibold transition ${activeTab === 'app' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-300 hover:text-white'}`}
+            className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${activeTab === 'app' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-300 hover:text-white'}`}
           >
             <ArrowRightLeft className="w-3.5 h-3.5 inline mr-1.5" /> 30-Team Trade Board
           </button>
           <button 
             onClick={() => setActiveTab('how-to-use')}
-            className={`px-4 py-1.5 rounded-md text-xs font-semibold transition ${activeTab === 'how-to-use' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-300 hover:text-white'}`}
+            className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${activeTab === 'how-to-use' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-300 hover:text-white'}`}
           >
             <BookOpen className="w-3.5 h-3.5 inline mr-1.5" /> How to Use It
+          </button>
+          <button 
+            onClick={() => setActiveTab('how-to-use-webmcp')}
+            className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${activeTab === 'how-to-use-webmcp' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-300 hover:text-white'}`}
+          >
+            <Sparkles className="w-3.5 h-3.5 inline mr-1.5 text-cyan-300" /> How to Use with WebMCP
           </button>
         </div>
 
@@ -868,240 +874,332 @@ export default function App() {
           </div>
 
         </div>
-      ) : (
-        /* VIEW 2: HOW TO USE IT TAB */
+      ) : activeTab === 'how-to-use' ? (
+        /* VIEW 2: HOW TO USE IT (HUMAN GM GUIDE & CBA RULES) */
         <div className="flex-1 bg-slate-950 p-6 overflow-y-auto">
-          <div className="max-w-7xl mx-auto space-y-6">
+          <div className="max-w-5xl mx-auto space-y-6">
             
             {/* Guide Header */}
             <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
               <div>
                 <div className="inline-block bg-orange-500/10 text-orange-400 text-xs px-3 py-1 rounded-full font-semibold mb-2 border border-orange-500/20">
-                  Interactive Co-Pilot & WebMCP Command Center
+                  General Manager Walkthrough &amp; CBA Rulebook
                 </div>
-                <h2 className="text-2xl font-extrabold text-white tracking-tight">How to Use CapSpace Pro with WebMCP</h2>
+                <h2 className="text-2xl font-extrabold text-white tracking-tight">How to Use CapSpace Pro</h2>
                 <p className="text-slate-300 text-xs mt-1">
-                  Learn how to construct multi-team trades manually, pin core assets, and let external AI agents solve 676-page CBA salary puzzles automatically via WebMCP.
+                  A complete step-by-step guide for constructing multi-team trades, locking franchise stars, and understanding NBA Collective Bargaining Agreement (CBA) constraints.
                 </p>
               </div>
-              <div className="flex items-center space-x-2">
-                <button 
-                  onClick={() => setActiveTab('app')}
-                  className="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition cursor-pointer"
-                >
-                  ← Open Trade Canvas
-                </button>
+              <button 
+                onClick={() => setActiveTab('app')}
+                className="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition cursor-pointer"
+              >
+                ← Open Trade Canvas
+              </button>
+            </div>
+
+            {/* 5-Step Workflow Cards */}
+            <div className="space-y-3.5">
+              <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center">
+                <span className="w-2 h-2 rounded-full bg-amber-400 mr-2"></span> 5-Step Trade Workflow
+              </h3>
+
+              {/* Step 1 */}
+              <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2 shadow-lg">
+                <div className="flex items-center space-x-2.5 text-orange-400 font-bold text-sm">
+                  <div className="w-6 h-6 rounded-lg bg-orange-500/10 flex items-center justify-center font-mono text-xs text-orange-300">1</div>
+                  <span>Select Trading Teams &amp; 3rd-Team Facilitator</span>
+                </div>
+                <p className="text-slate-300 text-xs leading-relaxed pl-8">
+                  Use the dropdown selectors in Column 1 and Column 2 to choose the primary trading partners. Column 3 lets you select a 3rd-party <strong>Facilitator</strong> (e.g., Charlotte Hornets or Utah Jazz) that holds open cap room or active Traded Player Exceptions (TPE).
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2 shadow-lg">
+                <div className="flex items-center space-x-2.5 text-amber-400 font-bold text-sm">
+                  <div className="w-6 h-6 rounded-lg bg-amber-500/10 flex items-center justify-center font-mono text-xs text-amber-300">2</div>
+                  <span>Lock Protected Superstars (🔒 Roster Protection)</span>
+                </div>
+                <p className="text-slate-300 text-xs leading-relaxed pl-8">
+                  Click the <strong>🔒 Lock icon</strong> on your franchise players (e.g., Jalen Brunson or Nikola Jokic). This marks them as untouchable so neither you nor any automated algorithm can trade them away.
+                </p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2 shadow-lg">
+                <div className="flex items-center space-x-2.5 text-cyan-400 font-bold text-sm">
+                  <div className="w-6 h-6 rounded-lg bg-cyan-500/10 flex items-center justify-center font-mono text-xs text-cyan-300">3</div>
+                  <span>Pin Core Deal Anchors (🔒 In-Card Lock) vs Flexible Filler (🔓)</span>
+                </div>
+                <p className="text-slate-300 text-xs leading-relaxed pl-8">
+                  Click <strong>"+ Trade"</strong> on the marquee player you want to acquire (e.g. Mikal Bridges). On the trade card, toggle <strong>[🔒 Core Target]</strong> or <strong>[🔒 Core Anchor]</strong>. Locked players remain 100% fixed in the deal, while unlocked (🔓 Flex) players can be routed to facilitators to satisfy salary matching.
+                </p>
+              </div>
+
+              {/* Step 4 */}
+              <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2 shadow-lg">
+                <div className="flex items-center space-x-2.5 text-emerald-400 font-bold text-sm">
+                  <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center font-mono text-xs text-emerald-300">4</div>
+                  <span>Route Excess Salaries into 3rd-Team TPE Vouchers</span>
+                </div>
+                <p className="text-slate-300 text-xs leading-relaxed pl-8">
+                  If a trade creates a salary mismatch, click <strong>"→ [TEAM] (TPE)"</strong> on outgoing bench players to absorb their salary into the facilitator's TPE exception without taking back equal salary.
+                </p>
+              </div>
+
+              {/* Step 5 */}
+              <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2 shadow-lg">
+                <div className="flex items-center space-x-2.5 text-indigo-400 font-bold text-sm">
+                  <div className="w-6 h-6 rounded-lg bg-indigo-500/10 flex items-center justify-center font-mono text-xs text-indigo-300">5</div>
+                  <span>Instant 1-Click "⚡ Auto-Balance Deal"</span>
+                </div>
+                <p className="text-slate-300 text-xs leading-relaxed pl-8">
+                  Whenever a trade is disallowed, click the glowing <strong>"⚡ Auto-Balance Deal"</strong> button in the bottom banner. The deterministic engine calculates the exact shortfall and auto-balances the deal to 100% legal status in &lt;1ms.
+                </p>
               </div>
             </div>
 
-            {/* 2-Column Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              
-              {/* Left Column: 5-Step Workflow (5 cols) */}
-              <div className="lg:col-span-5 space-y-4">
-                <h3 className="text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-amber-400 mr-2"></span> Human Co-Pilot Workflow
-                </h3>
+            {/* CBA Rules Cheat Sheet Table */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-3 shadow-xl">
+              <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center">
+                <ShieldCheck className="w-4 h-4 text-emerald-400 mr-2" /> 2025–26 NBA Collective Bargaining Agreement (CBA) Rules
+              </h3>
+              <div className="overflow-x-auto text-xs">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-800 text-slate-400 font-mono text-[11px]">
+                      <th className="py-2 pr-4">Threshold</th>
+                      <th className="py-2 pr-4">Dollar Value</th>
+                      <th className="py-2">Salary Matching &amp; Trade Restriction</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                    <tr>
+                      <td className="py-2 pr-4 font-bold text-emerald-400">Under Tax Line</td>
+                      <td className="py-2 pr-4 font-mono">&lt; $170.8M</td>
+                      <td className="py-2">Tiered matching: Up to 200% for contracts ≤ $7.5M; Outgoing + $7.5M for $7.5M–$29M; 125% + $250k above $29M.</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 font-bold text-amber-400">Taxpayer Zone</td>
+                      <td className="py-2 pr-4 font-mono">$170.8M – $178.1M</td>
+                      <td className="py-2">Allowable incoming salary is capped at 110% of outgoing salary + $250,000.</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 font-bold text-orange-400">First Apron</td>
+                      <td className="py-2 pr-4 font-mono">$178.1M – $188.9M</td>
+                      <td className="py-2">Hard 100% matching ceiling (cannot take back even $1 more incoming salary than outgoing).</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 font-bold text-rose-400">Second Apron</td>
+                      <td className="py-2 pr-4 font-mono">&gt; $188.9M</td>
+                      <td className="py-2 font-medium text-rose-300">Prohibited from aggregating multiple outgoing salaries in trades, sending cash, or using existing TPEs.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-                {/* Step 1 */}
-                <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2 shadow-lg">
-                  <div className="flex items-center space-x-2.5 text-orange-400 font-bold text-sm">
-                    <div className="w-6 h-6 rounded-lg bg-orange-500/10 flex items-center justify-center font-mono text-xs text-orange-300">1</div>
-                    <span>Select Trading Teams & Facilitator</span>
-                  </div>
-                  <p className="text-slate-300 text-xs leading-relaxed pl-8">
-                    Pick your 2 primary teams in Columns 1 & 2. Column 3 lets you choose a 3rd-team <strong>Facilitator</strong> (e.g. Charlotte or Utah) with active Trade Exceptions (TPE) or cap room.
-                  </p>
+          </div>
+        </div>
+      ) : (
+        /* VIEW 3: HOW TO USE WITH WEBMCP (AI AGENT AUTOMATION GUIDE) */
+        <div className="flex-1 bg-slate-950 p-6 overflow-y-auto">
+          <div className="max-w-6xl mx-auto space-y-6">
+            
+            {/* Header */}
+            <div className="border-b border-slate-800 pb-4 flex items-center justify-between">
+              <div>
+                <div className="inline-block bg-cyan-500/10 text-cyan-400 text-xs px-3 py-1 rounded-full font-semibold mb-2 border border-cyan-500/20">
+                  WebMCP Protocol &amp; Browser Agent Automation
                 </div>
+                <h2 className="text-2xl font-extrabold text-white tracking-tight">How to Use CapSpace Pro with WebMCP</h2>
+                <p className="text-slate-300 text-xs mt-1">
+                  Expose 676-page NBA Collective Bargaining Agreement (CBA) mechanics directly to external AI agents via standard WebMCP tools.
+                </p>
+              </div>
+              <button 
+                onClick={() => setActiveTab('app')}
+                className="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition cursor-pointer"
+              >
+                ← Open Trade Canvas
+              </button>
+            </div>
 
-                {/* Step 2 */}
-                <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2 shadow-lg">
-                  <div className="flex items-center space-x-2.5 text-amber-400 font-bold text-sm">
-                    <div className="w-6 h-6 rounded-lg bg-amber-500/10 flex items-center justify-center font-mono text-xs text-amber-300">2</div>
-                    <span>Lock Protected Superstars (🔒 Roster)</span>
-                  </div>
-                  <p className="text-slate-300 text-xs leading-relaxed pl-8">
-                    Click the <strong>🔒 Lock icon</strong> on franchise players (e.g., Jalen Brunson or Nikola Jokic). This prevents both humans and AI agents from ever trading them away.
-                  </p>
+            {/* Automation Setup Guide Card */}
+            <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 border border-cyan-500/40 rounded-xl p-5 space-y-3 shadow-xl">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-cyan-300 text-sm uppercase tracking-wider flex items-center">
+                  <Sparkles className="w-4 h-4 mr-2 text-cyan-400" /> How To Run Automatically in WebMCP-Enabled Browsers:
+                </span>
+                <span className="text-[10px] bg-cyan-950 text-cyan-300 px-2.5 py-1 rounded font-mono border border-cyan-500/30">
+                  Standard navigator.modelContext
+                </span>
+              </div>
+              <ol className="text-xs text-slate-300 space-y-2 pl-4 list-decimal leading-relaxed">
+                <li>
+                  <strong>Open CapSpace Pro:</strong> Navigate to <a href="https://capspace-pro.vercel.app" target="_blank" rel="noreferrer" className="text-cyan-400 underline font-mono">https://capspace-pro.vercel.app</a> in any WebMCP-compatible browser or client (ChatGPT Desktop in-app browser, Google Chrome with the <code>#enable-webmcp-testing</code> flag enabled, or Antigravity / Claude Code).
+                </li>
+                <li>
+                  <strong>Zero-Configuration Tool Discovery:</strong> The AI agent automatically reads the <strong>8 typed WebMCP tools</strong> registered on <code>window.navigator.modelContext</code> (no plugin installation, API keys, or web scraping required).
+                </li>
+                <li>
+                  <strong>Natural Language Co-Pilot:</strong> Type any trade goal or financial scenario to your AI assistant. The agent reads live cap status, validates trades, routes TPEs, and mutates the live React trade canvas in real time.
+                </li>
+              </ol>
+            </div>
+
+            {/* 8 Registered Tools Grid */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-3 shadow-xl">
+              <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center">
+                <Terminal className="w-4 h-4 text-cyan-400 mr-2" /> 8 Registered WebMCP Tools
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                  <div className="font-mono font-bold text-cyan-300 text-[11px]">list_all_teams (readOnly)</div>
+                  <p className="text-slate-400 text-[11px] mt-1">Returns all 30 NBA teams with total payrolls, tax apron tiers, and active TPE exceptions.</p>
                 </div>
-
-                {/* Step 3 */}
-                <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2 shadow-lg">
-                  <div className="flex items-center space-x-2.5 text-cyan-400 font-bold text-sm">
-                    <div className="w-6 h-6 rounded-lg bg-cyan-500/10 flex items-center justify-center font-mono text-xs text-cyan-300">3</div>
-                    <span>Pin Core Anchors (🔒 In-Card)</span>
-                  </div>
-                  <p className="text-slate-300 text-xs leading-relaxed pl-8">
-                    Click <strong>"+ Trade"</strong> on your marquee target. Click <strong>[🔒 Core Target]</strong> on the trade card to pin them as non-negotiable. The AI will strictly preserve them.
-                  </p>
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                  <div className="font-mono font-bold text-cyan-300 text-[11px]">get_team_cap_status (readOnly)</div>
+                  <p className="text-slate-400 text-[11px] mt-1">Returns a specific team's full payroll, tax apron distance, and allowable incoming salary.</p>
                 </div>
-
-                {/* Step 4 */}
-                <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2 shadow-lg">
-                  <div className="flex items-center space-x-2.5 text-emerald-400 font-bold text-sm">
-                    <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center font-mono text-xs text-emerald-300">4</div>
-                    <span>⚡ 1-Click Auto-Balance or Agent Solve</span>
-                  </div>
-                  <p className="text-slate-300 text-xs leading-relaxed pl-8">
-                    Click <strong>"⚡ Auto-Balance Deal"</strong> in the bottom banner, or prompt your WebMCP agent. The engine dynamically routes bench filler to 3rd-team TPEs to resolve salary deficits.
-                  </p>
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                  <div className="font-mono font-bold text-cyan-300 text-[11px]">validate_cba_trade (readOnly)</div>
+                  <p className="text-slate-400 text-[11px] mt-1">Client-side &lt;1ms CBA compliance engine returning exact dollar matching and violation reasons.</p>
                 </div>
-
-                {/* Step 5 */}
-                <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-2 shadow-lg">
-                  <div className="flex items-center space-x-2.5 text-indigo-400 font-bold text-sm">
-                    <div className="w-6 h-6 rounded-lg bg-indigo-500/10 flex items-center justify-center font-mono text-xs text-indigo-300">5</div>
-                    <span>Verify Real-Time CBA Compliance</span>
-                  </div>
-                  <p className="text-slate-300 text-xs leading-relaxed pl-8">
-                    The sticky bottom banner updates in &lt;1ms. If any Second Apron or bracket violation occurs, detailed citations explain why. When legal, it displays <strong>"TRADE APPROVED (100% Legal)"</strong>.
-                  </p>
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                  <div className="font-mono font-bold text-cyan-300 text-[11px]">find_facilitator_teams (readOnly)</div>
+                  <p className="text-slate-400 text-[11px] mt-1">Discovers 3rd-party teams with active TPEs or cap space capable of absorbing salary.</p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                  <div className="font-mono font-bold text-amber-300 text-[11px]">set_player_protection (mutation)</div>
+                  <p className="text-slate-400 text-[11px] mt-1">Toggles untouchable superstar protection lock on any roster player on screen.</p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                  <div className="font-mono font-bold text-teal-300 text-[11px]">route_salary_to_tpe (mutation)</div>
+                  <p className="text-slate-400 text-[11px] mt-1">Routes a player's outgoing salary directly into a 3rd team's Traded Player Exception.</p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                  <div className="font-mono font-bold text-orange-300 text-[11px]">auto_balance_trade (mutation)</div>
+                  <p className="text-slate-400 text-[11px] mt-1">Autonomously restructures the trade to 100% CBA legality while strictly preserving human anchors.</p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                  <div className="font-mono font-bold text-rose-300 text-[11px]">reset_trade (mutation)</div>
+                  <p className="text-slate-400 text-[11px] mt-1">Clears all trade cards, unlocks players, and restores the board to a blank canvas.</p>
                 </div>
               </div>
+            </div>
 
-              {/* Right Column: WebMCP Agent Integration & Example Prompts (7 cols) */}
-              <div className="lg:col-span-7 space-y-4">
-                <h3 className="text-sm font-bold text-cyan-400 uppercase tracking-wider flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 mr-2"></span> WebMCP Browser Automation & Natural Language Commands
-                </h3>
+            {/* 7 Natural Language Example Prompts Card */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-3 shadow-xl">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <span className="font-bold text-white text-xs uppercase tracking-wider flex items-center">
+                  <Terminal className="w-3.5 h-3.5 mr-1.5 text-amber-400" /> 7 Real-World Example WebMCP Prompts to Try:
+                </span>
+                <span className="text-[10px] text-slate-400">Copy &amp; paste into your AI agent</span>
+              </div>
 
-                {/* Automation Setup Guide Card */}
-                <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 border border-cyan-500/40 rounded-xl p-4 space-y-2.5 shadow-xl">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-cyan-300 text-xs uppercase tracking-wider flex items-center">
-                      <Sparkles className="w-3.5 h-3.5 mr-1 text-cyan-400" /> How To Use Automatically in WebMCP-Enabled Browsers:
-                    </span>
-                    <span className="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded font-mono border border-cyan-500/30">
-                      Standard navigator.modelContext
-                    </span>
+              <div className="space-y-3">
+                
+                {/* Prompt 1 */}
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-bold text-cyan-300">1. Full Multi-Team Blockbuster Solve</span>
+                    <span className="text-[9px] font-mono text-slate-400">Tools: validate_cba_trade, auto_balance_trade</span>
                   </div>
-                  <ol className="text-xs text-slate-300 space-y-1.5 pl-4 list-decimal leading-relaxed">
-                    <li>
-                      <strong>Open CapSpace Pro</strong> in any WebMCP-compatible client (such as ChatGPT Desktop in-app browser, Google Chrome with the <code>#enable-webmcp-testing</code> flag enabled, or Antigravity / Claude Code).
-                    </li>
-                    <li>
-                      <strong>Automatic Tool Discovery:</strong> The client automatically detects all <strong>8 typed WebMCP tools</strong> exposed on <code>window.navigator.modelContext</code> (no plugin installation or API keys needed).
-                    </li>
-                    <li>
-                      <strong>Talk in Plain English:</strong> Type any trade goal or scenario to your AI assistant. The agent reads the on-screen board, calls the tools, and mutates the live React trade canvas in real time!
-                    </li>
-                  </ol>
+                  <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2.5 rounded border border-slate-800 select-all">
+                    "Can New York acquire Mikal Bridges from Brooklyn without trading away Jalen Brunson or OG Anunoby? Balance the salaries using Charlotte as a 3rd-team facilitator."
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    → The agent locks Brunson/Anunoby, puts Bridges in trade, routes Bogdanovic/Sims, and balances into Charlotte's TPE.
+                  </p>
                 </div>
 
-                {/* 7 Example Natural Language Prompts Card */}
-                <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 space-y-3 shadow-xl">
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                    <span className="font-bold text-white text-xs uppercase tracking-wider flex items-center">
-                      <Terminal className="w-3.5 h-3.5 mr-1.5 text-amber-400" /> 7 Real-World Example WebMCP Prompts to Try:
-                    </span>
-                    <span className="text-[10px] text-slate-400">Copy &amp; paste into your AI agent</span>
+                {/* Prompt 2 */}
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-bold text-amber-300">2. Second Apron &amp; Salary Ceiling Audit</span>
+                    <span className="text-[9px] font-mono text-slate-400">Tools: get_team_cap_status</span>
                   </div>
-
-                  <div className="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
-                    
-                    {/* Prompt 1 */}
-                    <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
-                      <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-bold text-cyan-300">1. Full Multi-Team Blockbuster Solve</span>
-                        <span className="text-[9px] font-mono text-slate-400">Tools: validate_cba_trade, auto_balance_trade</span>
-                      </div>
-                      <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2 rounded border border-slate-800 select-all">
-                        "Can New York acquire Mikal Bridges from Brooklyn without trading away Jalen Brunson or OG Anunoby? Balance the salaries using Charlotte as a 3rd-team facilitator."
-                      </div>
-                      <p className="text-[10px] text-slate-400 mt-1">
-                        → The agent locks Brunson/Anunoby, puts Bridges in trade, routes Bogdanovic/Sims, and balances into Charlotte's TPE.
-                      </p>
-                    </div>
-
-                    {/* Prompt 2 */}
-                    <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
-                      <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-bold text-amber-300">2. Second Apron &amp; Salary Ceiling Audit</span>
-                        <span className="text-[9px] font-mono text-slate-400">Tools: get_team_cap_status</span>
-                      </div>
-                      <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2 rounded border border-slate-800 select-all">
-                        "Inspect the Denver Nuggets cap status. Are they in the Second Apron, and what is their allowable incoming salary if they send out Michael Porter Jr.?"
-                      </div>
-                      <p className="text-[10px] text-slate-400 mt-1">
-                        → Returns exact total payroll ($194.2M), Second Apron restriction citations, and 100% match requirements.
-                      </p>
-                    </div>
-
-                    {/* Prompt 3 */}
-                    <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
-                      <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-bold text-teal-300">3. Find 3rd-Party TPE Facilitators</span>
-                        <span className="text-[9px] font-mono text-slate-400">Tools: find_facilitator_teams</span>
-                      </div>
-                      <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2 rounded border border-slate-800 select-all">
-                        "Find all NBA teams with active Traded Player Exceptions (TPE) of at least $10M and open roster spots to absorb salary."
-                      </div>
-                      <p className="text-[10px] text-slate-400 mt-1">
-                        → Scans all 30 teams and discovers Charlotte ($10.5M Gordon Hayward TPE), Utah ($14.8M TPE), etc.
-                      </p>
-                    </div>
-
-                    {/* Prompt 4 */}
-                    <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
-                      <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-bold text-orange-300">4. Set Superstar Untouchable Locks</span>
-                        <span className="text-[9px] font-mono text-slate-400">Tools: set_player_protection</span>
-                      </div>
-                      <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2 rounded border border-slate-800 select-all">
-                        "Lock Nikola Jokic on Denver and Karl-Anthony Towns on New York as untouchable superstars."
-                      </div>
-                      <p className="text-[10px] text-slate-400 mt-1">
-                        → Instantly toggles the 🔒 protection lock on both players across the interactive UI.
-                      </p>
-                    </div>
-
-                    {/* Prompt 5 */}
-                    <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
-                      <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-bold text-emerald-300">5. Route Salary Direct to Facilitator TPE</span>
-                        <span className="text-[9px] font-mono text-slate-400">Tools: route_salary_to_tpe</span>
-                      </div>
-                      <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2 rounded border border-slate-800 select-all">
-                        "Route Jericho Sims ($2.09M) from New York into Charlotte's Gordon Hayward TPE exception."
-                      </div>
-                      <p className="text-[10px] text-slate-400 mt-1">
-                        → Absorbs Sims into Charlotte's TPE and updates Column 3 on screen in real time.
-                      </p>
-                    </div>
-
-                    {/* Prompt 6 */}
-                    <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
-                      <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-bold text-indigo-300">6. Autonomous Deal Re-Balancing</span>
-                        <span className="text-[9px] font-mono text-slate-400">Tools: auto_balance_trade</span>
-                      </div>
-                      <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2 rounded border border-slate-800 select-all">
-                        "Auto-balance the current trade on screen to 100% CBA legality while preserving my locked core pieces."
-                      </div>
-                      <p className="text-[10px] text-slate-400 mt-1">
-                        → Calculates the exact salary mismatch, extracts bench filler, and turns the bottom status banner 100% APPROVED.
-                      </p>
-                    </div>
-
-                    {/* Prompt 7 */}
-                    <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
-                      <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="font-bold text-rose-300">7. Reset Trade Canvas to Blank Slate</span>
-                        <span className="text-[9px] font-mono text-slate-400">Tools: reset_trade</span>
-                      </div>
-                      <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2 rounded border border-slate-800 select-all">
-                        "Reset the trade canvas back to a clean blank slate and unlock all players."
-                      </div>
-                      <p className="text-[10px] text-slate-400 mt-1">
-                        → Clears all trade cards, unlocks roster pieces, and restores the board to a fresh canvas.
-                      </p>
-                    </div>
-
+                  <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2.5 rounded border border-slate-800 select-all">
+                    "Inspect the Denver Nuggets cap status. Are they in the Second Apron, and what is their allowable incoming salary if they send out Michael Porter Jr.?"
                   </div>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    → Returns exact total payroll ($194.2M), Second Apron restriction citations, and 100% match requirements.
+                  </p>
+                </div>
+
+                {/* Prompt 3 */}
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-bold text-teal-300">3. Find 3rd-Party TPE Facilitators</span>
+                    <span className="text-[9px] font-mono text-slate-400">Tools: find_facilitator_teams</span>
+                  </div>
+                  <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2.5 rounded border border-slate-800 select-all">
+                    "Find all NBA teams with active Traded Player Exceptions (TPE) of at least $10M and open roster spots to absorb salary."
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    → Scans all 30 teams and discovers Charlotte ($10.5M Gordon Hayward TPE), Utah ($14.8M TPE), etc.
+                  </p>
+                </div>
+
+                {/* Prompt 4 */}
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-bold text-orange-300">4. Set Superstar Untouchable Locks</span>
+                    <span className="text-[9px] font-mono text-slate-400">Tools: set_player_protection</span>
+                  </div>
+                  <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2.5 rounded border border-slate-800 select-all">
+                    "Lock Nikola Jokic on Denver and Karl-Anthony Towns on New York as untouchable superstars."
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    → Instantly toggles the 🔒 protection lock on both players across the interactive UI.
+                  </p>
+                </div>
+
+                {/* Prompt 5 */}
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-bold text-emerald-300">5. Route Salary Direct to Facilitator TPE</span>
+                    <span className="text-[9px] font-mono text-slate-400">Tools: route_salary_to_tpe</span>
+                  </div>
+                  <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2.5 rounded border border-slate-800 select-all">
+                    "Route Jericho Sims ($2.09M) from New York into Charlotte's Gordon Hayward TPE exception."
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    → Absorbs Sims into Charlotte's TPE and updates Column 3 on screen in real time.
+                  </p>
+                </div>
+
+                {/* Prompt 6 */}
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-bold text-indigo-300">6. Autonomous Deal Re-Balancing</span>
+                    <span className="text-[9px] font-mono text-slate-400">Tools: auto_balance_trade</span>
+                  </div>
+                  <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2.5 rounded border border-slate-800 select-all">
+                    "Auto-balance the current trade on screen to 100% CBA legality while preserving my locked core pieces."
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    → Calculates the exact salary mismatch, extracts bench filler, and turns the bottom status banner 100% APPROVED.
+                  </p>
+                </div>
+
+                {/* Prompt 7 */}
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition">
+                  <div className="flex items-center justify-between text-[11px] mb-1">
+                    <span className="font-bold text-rose-300">7. Reset Trade Canvas to Blank Slate</span>
+                    <span className="text-[9px] font-mono text-slate-400">Tools: reset_trade</span>
+                  </div>
+                  <div className="font-mono text-xs text-slate-200 bg-slate-900 p-2.5 rounded border border-slate-800 select-all">
+                    "Reset the trade canvas back to a clean blank slate and unlock all players."
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    → Clears all trade cards, unlocks roster pieces, and restores the board to a fresh canvas.
+                  </p>
                 </div>
 
               </div>
-
             </div>
 
           </div>
