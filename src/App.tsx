@@ -104,6 +104,13 @@ export default function App() {
     setTradeLegs(getInitialLegs(team1Id, team2Id));
   };
 
+  const handleAutoBalanceClick = () => {
+    const result = CBAEngine.autoBalanceTrade(teams, tradeLegs, team3Id);
+    if (result.solvedLegs) {
+      setTradeLegs(result.solvedLegs);
+    }
+  };
+
   const handleLoadDemo = () => {
     setTeam1Id('NYK');
     setTeam2Id('BKN');
@@ -787,9 +794,14 @@ export default function App() {
                     <div key={i} className="pl-6 text-[11px] text-rose-200 font-medium leading-tight">• {v.reason}</div>
                   ))}
                 </div>
-                <div className="text-[10px] text-rose-300/80 italic ml-4 flex-shrink-0 self-center bg-rose-900/40 px-2.5 py-1 rounded border border-rose-500/30">
-                  Let external AI agent auto-balance via WebMCP
-                </div>
+                <button
+                  onClick={handleAutoBalanceClick}
+                  className="ml-4 flex-shrink-0 self-center bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold text-xs px-3.5 py-2 rounded-lg shadow-lg shadow-orange-500/30 flex items-center space-x-1.5 transition cursor-pointer border border-amber-400/40"
+                  title="Autonomously solves salary matching and routes filler to facilitator while strictly preserving your manual trade anchors"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-200" />
+                  <span>⚡ Auto-Balance Deal</span>
+                </button>
               </div>
             )}
           </div>

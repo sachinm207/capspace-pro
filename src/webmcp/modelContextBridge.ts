@@ -266,55 +266,55 @@ export function initializeWebMCP(
   // Tool 7: auto_balance_trade
   register({
     name: 'auto_balance_trade',
-    description: 'Autonomously restructures the on-screen trade across teams to achieve 100% CBA legality while respecting protected players and 2nd Apron limits.',
+    description: 'Autonomously restructures the on-screen trade across teams to achieve 100% CBA legality while strictly preserving your existing manual trade assets and respecting protected players.',
     readOnlyHint: false,
     inputSchema: {
       type: 'object',
       properties: {
         primaryTeamId: { type: 'string', description: 'Primary acquiring team e.g. NYK, LAL, GSW' },
-        targetPlayerId: { type: 'string' }
-      },
-      required: ['primaryTeamId']
+        facilitatorTeamId: { type: 'string', description: 'Preferred 3rd-team facilitator e.g. CHA, UTA, SAS' }
+      }
     },
-    execute: async (params: { primaryTeamId: string; targetPlayerId?: string }) => {
-      const primaryCode = (params.primaryTeamId || 'NYK').toUpperCase();
-      const nyk = teams.find(t => t.id === primaryCode) || teams.find(t => t.id === 'NYK')!;
-      const bkn = teams.find(t => t.id === 'BKN')!;
+    execute: async (params: { primaryTeamId?: string; facilitatorTeamId?: string }) => {
+      // If current board is completely empty and primary team is NYK, populate starter baseline first
+      let activeLegs = currentLegs;
+      const totalTraded = activeLegs.reduce((sum, l) => sum + l.outgoingPlayers.length + l.incomingPlayers.length, 0);
+      
+      if (totalTraded === 0) {
+        const nyk = teams.find(t => t.id === 'NYK')!;
+        const bkn = teams.find(t => t.id === 'BKN')!;
+        const bridges = bkn.roster.find(p => p.id === 'p_bridges_mikal') || bkn.roster[0];
+        const bogdanovic = nyk.roster.find(p => p.id === 'p_bogdanovic') || nyk.roster[4];
 
-      const solvedLegs: TeamTradeLeg[] = [
-        {
-          teamId: 'NYK',
-          incomingPlayers: [bkn.roster.find(p => p.id === 'p_bridges_mikal')!],
-          outgoingPlayers: [
-            nyk.roster.find(p => p.id === 'p_bogdanovic')!,
-            nyk.roster.find(p => p.id === 'p_sims')!
-          ],
-          incomingPicks: [],
-          outgoingPicks: ['2026 2nd (NYK)']
-        },
-        {
-          teamId: 'BKN',
-          incomingPlayers: [nyk.roster.find(p => p.id === 'p_bogdanovic')!],
-          outgoingPlayers: [bkn.roster.find(p => p.id === 'p_bridges_mikal')!],
-          incomingPicks: ['2026 2nd (NYK)'],
-          outgoingPicks: []
-        },
-        {
-          teamId: 'CHA',
-          incomingPlayers: [nyk.roster.find(p => p.id === 'p_sims')!],
-          outgoingPlayers: [],
-          incomingPicks: ['2026 2nd (NYK)'],
-          outgoingPicks: [],
-          tpeUsed: { id: 'tpe_hayward', amountAbsorbed: 2092344 }
-        }
-      ];
+        activeLegs = [
+          {
+            teamId: 'NYK',
+            incomingPlayers: bridges ? [bridges] : [],
+            outgoingPlayers: bogdanovic ? [bogdanovic] : [],
+            incomingPicks: [],
+            outgoingPicks: []
+          },
+          {
+            teamId: 'BKN',
+            incomingPlayers: bogdanovic ? [bogdanovic] : [],
+            outgoingPlayers: bridges ? [bridges] : [],
+            incomingPicks: [],
+            outgoingPicks: []
+          }
+        ];
+      }
 
-      actions.onUpdateTradeLegs(solvedLegs);
-      const validation = CBAEngine.validateTrade(teams, solvedLegs);
+      const result = CBAEngine.autoBalanceTrade(teams, activeLegs, params?.facilitatorTeamId || 'CHA');
+      if (result.solvedLegs) {
+        actions.onUpdateTradeLegs(result.solvedLegs);
+      }
+
+      const validation = CBAEngine.validateTrade(teams, result.solvedLegs);
       return {
-        success: true,
-        tradeStatus: '100% Legal CBA Approved',
-        solvedLegs,
+        success: result.success,
+        message: result.message,
+        tradeStatus: validation.isLegal ? '100% Legal CBA Approved' : 'Disallowed',
+        solvedLegs: result.solvedLegs,
         validation
       };
     }
