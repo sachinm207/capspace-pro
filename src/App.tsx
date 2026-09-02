@@ -100,8 +100,29 @@ export default function App() {
     }));
   };
 
-  const handleResetClick = () => {
+  const handleResetAll = () => {
+    setTeams(prev => prev.map(t => ({
+      ...t,
+      roster: t.roster.map(p => ({ ...p, isProtected: false, isAnchor: false }))
+    })));
     setTradeLegs(getInitialLegs(team1Id, team2Id));
+  };
+
+  const handleToggleAnchor = (teamId: string, playerId: string, type: 'incoming' | 'outgoing') => {
+    setTradeLegs(prev => prev.map(leg => {
+      if (leg.teamId !== teamId) return leg;
+      if (type === 'incoming') {
+        return {
+          ...leg,
+          incomingPlayers: leg.incomingPlayers.map(p => p.id === playerId ? { ...p, isAnchor: !p.isAnchor } : p)
+        };
+      } else {
+        return {
+          ...leg,
+          outgoingPlayers: leg.outgoingPlayers.map(p => p.id === playerId ? { ...p, isAnchor: !p.isAnchor } : p)
+        };
+      }
+    }));
   };
 
   const handleAutoBalanceClick = () => {
@@ -357,17 +378,17 @@ export default function App() {
             <div className="flex items-center space-x-2">
               <button 
                 onClick={handleLoadDemo}
-                className="text-xs bg-cyan-950/80 hover:bg-cyan-900 text-cyan-300 px-3 py-1.5 rounded-lg border border-cyan-500/40 flex items-center transition font-semibold shadow-sm"
+                className="text-xs bg-cyan-950/80 hover:bg-cyan-900 text-cyan-300 px-3 py-1.5 rounded-lg border border-cyan-500/40 flex items-center transition font-semibold shadow-sm cursor-pointer"
                 title="Loads a pre-configured 3-team blockbuster trade scenario (NYK / BKN / CHA)"
               >
                 <Sparkles className="w-3.5 h-3.5 mr-1.5 text-cyan-400" /> Load Demo Scenario
               </button>
               <button 
-                onClick={handleResetClick}
-                className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center transition"
-                title="Clears all incoming and outgoing players on the trade board"
+                onClick={handleResetAll}
+                className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center transition cursor-pointer font-medium"
+                title="Clears all trades, unlocks all players, and resets the board to a clean blank canvas"
               >
-                <RotateCcw className="w-3.5 h-3.5 mr-1.5" /> Clear Board
+                <RotateCcw className="w-3.5 h-3.5 mr-1.5" /> Reset All (Blank Canvas)
               </button>
             </div>
           </div>
@@ -411,9 +432,18 @@ export default function App() {
                       <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Incoming:</div>
                       {leg && leg.incomingPlayers.length > 0 ? (
                         leg.incomingPlayers.map(p => (
-                          <div key={p.id} className="p-2 rounded-lg bg-slate-800 border border-cyan-500/40 text-xs flex justify-between items-center shadow-sm">
-                            <span className="font-bold text-white text-[11px]">{p.name} ({p.pos})</span>
-                            <span className="font-mono font-semibold text-cyan-400 text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
+                          <div key={p.id} className={`p-2 rounded-lg bg-slate-800 text-xs flex justify-between items-center shadow-sm border transition ${p.isAnchor ? 'border-amber-400/80 shadow-amber-500/10' : 'border-cyan-500/40'}`}>
+                            <div className="truncate mr-1">
+                              <span className="font-bold text-white text-[11px] block">{p.name} ({p.pos})</span>
+                              <span className="font-mono font-semibold text-cyan-400 text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
+                            </div>
+                            <button 
+                              onClick={() => handleToggleAnchor(team1.id, p.id, 'incoming')}
+                              className={`text-[9px] px-1.5 py-0.5 rounded font-semibold flex items-center transition cursor-pointer ${p.isAnchor ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-700/60 text-slate-400 hover:text-slate-200 border border-slate-600/40'}`}
+                              title={p.isAnchor ? "Locked Core Target (AI cannot swap or remove)" : "Click to Lock as Core Target"}
+                            >
+                              {p.isAnchor ? <><Lock className="w-2.5 h-2.5 mr-1 text-amber-300" /> Core Target</> : <><Unlock className="w-2.5 h-2.5 mr-1" /> Flex</>}
+                            </button>
                           </div>
                         ))
                       ) : (
@@ -423,10 +453,19 @@ export default function App() {
                       <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider mt-2">Outgoing:</div>
                       {leg && leg.outgoingPlayers.length > 0 ? (
                         leg.outgoingPlayers.map(p => (
-                          <div key={p.id} className="p-2 rounded-lg bg-slate-800/60 border border-slate-700/60 text-xs flex justify-between items-center">
-                            <span className="text-slate-200 font-medium text-[11px] truncate mr-1">{p.name} ({p.pos})</span>
-                            <div className="flex items-center space-x-1.5 flex-shrink-0">
+                          <div key={p.id} className={`p-2 rounded-lg bg-slate-800/60 text-xs flex justify-between items-center border transition ${p.isAnchor ? 'border-amber-400/80 shadow-amber-500/10' : 'border-slate-700/60'}`}>
+                            <div className="truncate mr-1">
+                              <span className="text-slate-200 font-medium text-[11px] block truncate">{p.name} ({p.pos})</span>
                               <span className="font-mono text-slate-300 font-semibold text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
+                            </div>
+                            <div className="flex items-center space-x-1.5 flex-shrink-0">
+                              <button 
+                                onClick={() => handleToggleAnchor(team1.id, p.id, 'outgoing')}
+                                className={`text-[9px] px-1.5 py-0.5 rounded font-semibold flex items-center transition cursor-pointer ${p.isAnchor ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-700/60 text-slate-400 hover:text-slate-200 border border-slate-600/40'}`}
+                                title={p.isAnchor ? "Locked Core Piece (AI cannot substitute or route)" : "Click to Lock as Core Piece"}
+                              >
+                                {p.isAnchor ? <><Lock className="w-2.5 h-2.5 mr-1 text-amber-300" /> Locked Anchor</> : <><Unlock className="w-2.5 h-2.5 mr-1" /> Flex</>}
+                              </button>
                               <button 
                                 onClick={() => handleRouteToFacilitator(team1.id, p, team3Id)}
                                 className="text-[9px] bg-teal-900/60 hover:bg-teal-800 text-teal-300 px-1.5 py-0.5 rounded border border-teal-500/40 font-semibold"
@@ -565,9 +604,18 @@ export default function App() {
                       <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Incoming:</div>
                       {leg && leg.incomingPlayers.length > 0 ? (
                         leg.incomingPlayers.map(p => (
-                          <div key={p.id} className="p-2 rounded-lg bg-slate-800 border border-cyan-500/40 text-xs flex justify-between items-center shadow-sm">
-                            <span className="font-bold text-white text-[11px]">{p.name} ({p.pos})</span>
-                            <span className="font-mono font-semibold text-cyan-400 text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
+                          <div key={p.id} className={`p-2 rounded-lg bg-slate-800 text-xs flex justify-between items-center shadow-sm border transition ${p.isAnchor ? 'border-amber-400/80 shadow-amber-500/10' : 'border-cyan-500/40'}`}>
+                            <div className="truncate mr-1">
+                              <span className="font-bold text-white text-[11px] block">{p.name} ({p.pos})</span>
+                              <span className="font-mono font-semibold text-cyan-400 text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
+                            </div>
+                            <button 
+                              onClick={() => handleToggleAnchor(team2.id, p.id, 'incoming')}
+                              className={`text-[9px] px-1.5 py-0.5 rounded font-semibold flex items-center transition cursor-pointer ${p.isAnchor ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-700/60 text-slate-400 hover:text-slate-200 border border-slate-600/40'}`}
+                              title={p.isAnchor ? "Locked Core Target (AI cannot swap or remove)" : "Click to Lock as Core Target"}
+                            >
+                              {p.isAnchor ? <><Lock className="w-2.5 h-2.5 mr-1 text-amber-300" /> Core Target</> : <><Unlock className="w-2.5 h-2.5 mr-1" /> Flex</>}
+                            </button>
                           </div>
                         ))
                       ) : (
@@ -577,10 +625,19 @@ export default function App() {
                       <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider mt-2">Outgoing:</div>
                       {leg && leg.outgoingPlayers.length > 0 ? (
                         leg.outgoingPlayers.map(p => (
-                          <div key={p.id} className="p-2 rounded-lg bg-slate-800/60 border border-slate-700/60 text-xs flex justify-between items-center">
-                            <span className="text-slate-200 font-medium text-[11px] truncate mr-1">{p.name} ({p.pos})</span>
-                            <div className="flex items-center space-x-1.5 flex-shrink-0">
+                          <div key={p.id} className={`p-2 rounded-lg bg-slate-800/60 text-xs flex justify-between items-center border transition ${p.isAnchor ? 'border-amber-400/80 shadow-amber-500/10' : 'border-slate-700/60'}`}>
+                            <div className="truncate mr-1">
+                              <span className="text-slate-200 font-medium text-[11px] block truncate">{p.name} ({p.pos})</span>
                               <span className="font-mono text-slate-300 font-semibold text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
+                            </div>
+                            <div className="flex items-center space-x-1.5 flex-shrink-0">
+                              <button 
+                                onClick={() => handleToggleAnchor(team2.id, p.id, 'outgoing')}
+                                className={`text-[9px] px-1.5 py-0.5 rounded font-semibold flex items-center transition cursor-pointer ${p.isAnchor ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-700/60 text-slate-400 hover:text-slate-200 border border-slate-600/40'}`}
+                                title={p.isAnchor ? "Locked Core Piece (AI cannot substitute or route)" : "Click to Lock as Core Piece"}
+                              >
+                                {p.isAnchor ? <><Lock className="w-2.5 h-2.5 mr-1 text-amber-300" /> Locked Anchor</> : <><Unlock className="w-2.5 h-2.5 mr-1" /> Flex</>}
+                              </button>
                               <button 
                                 onClick={() => handleRouteToFacilitator(team2.id, p, team3Id)}
                                 className="text-[9px] bg-teal-900/60 hover:bg-teal-800 text-teal-300 px-1.5 py-0.5 rounded border border-teal-500/40 font-semibold"

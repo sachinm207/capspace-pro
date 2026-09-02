@@ -6,6 +6,7 @@ export interface Player {
   pos: string;
   salary: number;
   isProtected?: boolean;
+  isAnchor?: boolean;
   tradeStatus?: string;
 }
 
