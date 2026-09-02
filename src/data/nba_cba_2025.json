@@ -1,0 +1,1701 @@
+{
+  "cbaConstants": {
+    "salaryCap": 140588000,
+    "luxuryTaxThreshold": 170814000,
+    "firstApronThreshold": 178132000,
+    "secondApronThreshold": 188931000,
+    "minimumContractValue": 2087519,
+    "maxRosterSpots": 15,
+    "minRosterSpots": 14,
+    "lastSyncedTimestamp": "2026-09-03T00:00:00Z"
+  },
+  "teams": [
+    {
+      "id": "BOS",
+      "name": "Boston",
+      "fullName": "Boston Celtics",
+      "conference": "Eastern",
+      "color": "#007A33",
+      "totalPayroll": 196400000,
+      "apronTier": "second_apron",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_tatum",
+          "name": "Jayson Tatum",
+          "pos": "SF",
+          "salary": 34848340,
+          "isProtected": true
+        },
+        {
+          "id": "p_brown",
+          "name": "Jaylen Brown",
+          "pos": "SG",
+          "salary": 49700000,
+          "isProtected": true
+        },
+        {
+          "id": "p_porzingis",
+          "name": "Kristaps Porzingis",
+          "pos": "C",
+          "salary": 29268293,
+          "isProtected": false
+        },
+        {
+          "id": "p_holiday",
+          "name": "Jrue Holiday",
+          "pos": "PG",
+          "salary": 30000000,
+          "isProtected": false
+        },
+        {
+          "id": "p_white",
+          "name": "Derrick White",
+          "pos": "PG",
+          "salary": 20071429,
+          "isProtected": false
+        },
+        {
+          "id": "p_horford",
+          "name": "Al Horford",
+          "pos": "C",
+          "salary": 9500000,
+          "isProtected": false
+        },
+        {
+          "id": "p_pritchard",
+          "name": "Payton Pritchard",
+          "pos": "PG",
+          "salary": 6700000,
+          "isProtected": false
+        },
+        {
+          "id": "p_hauser",
+          "name": "Sam Hauser",
+          "pos": "SF",
+          "salary": 2092344,
+          "isProtected": false
+        },
+        {
+          "id": "p_kornet",
+          "name": "Luke Kornet",
+          "pos": "C",
+          "salary": 2087519,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (BOS)",
+        "2026 2nd (BOS)",
+        "2027 1st (BOS)"
+      ]
+    },
+    {
+      "id": "NYK",
+      "name": "New York",
+      "fullName": "New York Knicks",
+      "conference": "Eastern",
+      "color": "#006BB6",
+      "totalPayroll": 173500000,
+      "apronTier": "taxpayer",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_brunson",
+          "name": "Jalen Brunson",
+          "pos": "PG",
+          "salary": 24960000,
+          "isProtected": true
+        },
+        {
+          "id": "p_anunoby",
+          "name": "OG Anunoby",
+          "pos": "SF",
+          "salary": 36600000,
+          "isProtected": true
+        },
+        {
+          "id": "p_randle",
+          "name": "Julius Randle",
+          "pos": "PF",
+          "salary": 28939680,
+          "isProtected": false
+        },
+        {
+          "id": "p_hart",
+          "name": "Josh Hart",
+          "pos": "SG",
+          "salary": 18144000,
+          "isProtected": false
+        },
+        {
+          "id": "p_bogdanovic",
+          "name": "Bojan Bogdanovic",
+          "pos": "SF",
+          "salary": 19032850,
+          "isProtected": false
+        },
+        {
+          "id": "p_robinson",
+          "name": "Mitchell Robinson",
+          "pos": "C",
+          "salary": 14318182,
+          "isProtected": false
+        },
+        {
+          "id": "p_divincenzo",
+          "name": "Donte DiVincenzo",
+          "pos": "SG",
+          "salary": 11445000,
+          "isProtected": false
+        },
+        {
+          "id": "p_mcbride",
+          "name": "Miles McBride",
+          "pos": "PG",
+          "salary": 4710144,
+          "isProtected": false
+        },
+        {
+          "id": "p_sims",
+          "name": "Jericho Sims",
+          "pos": "C",
+          "salary": 2092344,
+          "isProtected": false
+        },
+        {
+          "id": "p_jeffries",
+          "name": "DaQuan Jeffries",
+          "pos": "SG",
+          "salary": 2087519,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (NYK)",
+        "2026 2nd (NYK)",
+        "2027 1st (Protected)"
+      ]
+    },
+    {
+      "id": "BKN",
+      "name": "Brooklyn",
+      "fullName": "Brooklyn Nets",
+      "conference": "Eastern",
+      "color": "#000000",
+      "totalPayroll": 131200000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_dinwiddie",
+          "name": "Spencer Dinwiddie Exception",
+          "amount": 9500000,
+          "expires": "2025-07-01"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_bridges_mikal",
+          "name": "Mikal Bridges",
+          "pos": "SF",
+          "salary": 23300000,
+          "isProtected": false
+        },
+        {
+          "id": "p_claxton",
+          "name": "Nicolas Claxton",
+          "pos": "C",
+          "salary": 25000000,
+          "isProtected": true
+        },
+        {
+          "id": "p_thomas",
+          "name": "Cam Thomas",
+          "pos": "SG",
+          "salary": 4041249,
+          "isProtected": false
+        },
+        {
+          "id": "p_johnson_c",
+          "name": "Cameron Johnson",
+          "pos": "PF",
+          "salary": 22500000,
+          "isProtected": false
+        },
+        {
+          "id": "p_schroder",
+          "name": "Dennis Schroder",
+          "pos": "PG",
+          "salary": 13025250,
+          "isProtected": false
+        },
+        {
+          "id": "p_simmons",
+          "name": "Ben Simmons",
+          "pos": "PG",
+          "salary": 40338144,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (PHX)",
+        "2027 1st (PHX)",
+        "2029 1st (DAL)"
+      ]
+    },
+    {
+      "id": "PHI",
+      "name": "Philadelphia",
+      "fullName": "Philadelphia 76ers",
+      "conference": "Eastern",
+      "color": "#006BB6",
+      "totalPayroll": 178900000,
+      "apronTier": "first_apron",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_embiid",
+          "name": "Joel Embiid",
+          "pos": "C",
+          "salary": 51415938,
+          "isProtected": true
+        },
+        {
+          "id": "p_maxey",
+          "name": "Tyrese Maxey",
+          "pos": "PG",
+          "salary": 35147000,
+          "isProtected": true
+        },
+        {
+          "id": "p_george",
+          "name": "Paul George",
+          "pos": "SF",
+          "salary": 49205800,
+          "isProtected": true
+        },
+        {
+          "id": "p_oubre",
+          "name": "Kelly Oubre Jr.",
+          "pos": "SG",
+          "salary": 7983000,
+          "isProtected": false
+        },
+        {
+          "id": "p_drummond",
+          "name": "Andre Drummond",
+          "pos": "C",
+          "salary": 5000000,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2026 1st (PHI)",
+        "2028 1st (LAC)"
+      ]
+    },
+    {
+      "id": "TOR",
+      "name": "Toronto",
+      "fullName": "Toronto Raptors",
+      "conference": "Eastern",
+      "color": "#CE1141",
+      "totalPayroll": 139500000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_siakam",
+          "name": "Pascal Siakam TPE",
+          "amount": 10200000,
+          "expires": "2025-07-15"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_barnes",
+          "name": "Scottie Barnes",
+          "pos": "SF",
+          "salary": 35147000,
+          "isProtected": true
+        },
+        {
+          "id": "p_quickley",
+          "name": "Immanuel Quickley",
+          "pos": "PG",
+          "salary": 32500000,
+          "isProtected": true
+        },
+        {
+          "id": "p_barrett",
+          "name": "RJ Barrett",
+          "pos": "SG",
+          "salary": 25794643,
+          "isProtected": false
+        },
+        {
+          "id": "p_poeltl",
+          "name": "Jakob Poeltl",
+          "pos": "C",
+          "salary": 19500000,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (TOR)",
+        "2026 1st (IND)"
+      ]
+    },
+    {
+      "id": "MIL",
+      "name": "Milwaukee",
+      "fullName": "Milwaukee Bucks",
+      "conference": "Eastern",
+      "color": "#00471B",
+      "totalPayroll": 191200000,
+      "apronTier": "second_apron",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_giannis",
+          "name": "Giannis Antetokounmpo",
+          "pos": "PF",
+          "salary": 48787676,
+          "isProtected": true
+        },
+        {
+          "id": "p_lillard",
+          "name": "Damian Lillard",
+          "pos": "PG",
+          "salary": 48787676,
+          "isProtected": true
+        },
+        {
+          "id": "p_middleton",
+          "name": "Khris Middleton",
+          "pos": "SF",
+          "salary": 31000000,
+          "isProtected": false
+        },
+        {
+          "id": "p_lopez",
+          "name": "Brook Lopez",
+          "pos": "C",
+          "salary": 25000000,
+          "isProtected": false
+        },
+        {
+          "id": "p_portis",
+          "name": "Bobby Portis",
+          "pos": "PF",
+          "salary": 12578286,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2031 1st (MIL)"
+      ]
+    },
+    {
+      "id": "CLE",
+      "name": "Cleveland",
+      "fullName": "Cleveland Cavaliers",
+      "conference": "Eastern",
+      "color": "#860038",
+      "totalPayroll": 172400000,
+      "apronTier": "taxpayer",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_mitchell",
+          "name": "Donovan Mitchell",
+          "pos": "SG",
+          "salary": 35410310,
+          "isProtected": true
+        },
+        {
+          "id": "p_garland",
+          "name": "Darius Garland",
+          "pos": "PG",
+          "salary": 36725670,
+          "isProtected": true
+        },
+        {
+          "id": "p_mobley",
+          "name": "Evan Mobley",
+          "pos": "PF",
+          "salary": 11227657,
+          "isProtected": true
+        },
+        {
+          "id": "p_allen_j",
+          "name": "Jarrett Allen",
+          "pos": "C",
+          "salary": 20000000,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (CLE)",
+        "2027 1st (CLE)"
+      ]
+    },
+    {
+      "id": "IND",
+      "name": "Indiana",
+      "fullName": "Indiana Pacers",
+      "conference": "Eastern",
+      "color": "#002D62",
+      "totalPayroll": 165000000,
+      "apronTier": "under_cap",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_haliburton",
+          "name": "Tyrese Haliburton",
+          "pos": "PG",
+          "salary": 35147000,
+          "isProtected": true
+        },
+        {
+          "id": "p_siakam_i",
+          "name": "Pascal Siakam",
+          "pos": "PF",
+          "salary": 42176400,
+          "isProtected": true
+        },
+        {
+          "id": "p_turner",
+          "name": "Myles Turner",
+          "pos": "C",
+          "salary": 19928500,
+          "isProtected": false
+        },
+        {
+          "id": "p_nesmith",
+          "name": "Aaron Nesmith",
+          "pos": "SF",
+          "salary": 11000000,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (IND)",
+        "2026 2nd (IND)"
+      ]
+    },
+    {
+      "id": "CHI",
+      "name": "Chicago",
+      "fullName": "Chicago Bulls",
+      "conference": "Eastern",
+      "color": "#CE1141",
+      "totalPayroll": 158200000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_derozan",
+          "name": "DeMar DeRozan TPE",
+          "amount": 8500000,
+          "expires": "2025-07-06"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_lavine",
+          "name": "Zach LaVine",
+          "pos": "SG",
+          "salary": 43031940,
+          "isProtected": false
+        },
+        {
+          "id": "p_vucevic",
+          "name": "Nikola Vucevic",
+          "pos": "C",
+          "salary": 20000000,
+          "isProtected": false
+        },
+        {
+          "id": "p_white_c",
+          "name": "Coby White",
+          "pos": "PG",
+          "salary": 12000000,
+          "isProtected": true
+        },
+        {
+          "id": "p_giddey",
+          "name": "Josh Giddey",
+          "pos": "PG",
+          "salary": 8352367,
+          "isProtected": true
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (CHI)",
+        "2027 1st (CHI)"
+      ]
+    },
+    {
+      "id": "DET",
+      "name": "Detroit",
+      "fullName": "Detroit Pistons",
+      "conference": "Eastern",
+      "color": "#1D42BA",
+      "totalPayroll": 122000000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_bogey",
+          "name": "Detroit Cap Exception",
+          "amount": 14200000,
+          "expires": "2025-08-01"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_cunningham",
+          "name": "Cade Cunningham",
+          "pos": "PG",
+          "salary": 13940809,
+          "isProtected": true
+        },
+        {
+          "id": "p_duren",
+          "name": "Jalen Duren",
+          "pos": "C",
+          "salary": 4485120,
+          "isProtected": true
+        },
+        {
+          "id": "p_ivey",
+          "name": "Jaden Ivey",
+          "pos": "SG",
+          "salary": 7977240,
+          "isProtected": false
+        },
+        {
+          "id": "p_harris_t",
+          "name": "Tobias Harris",
+          "pos": "PF",
+          "salary": 25365854,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (DET)",
+        "2026 1st (DET)",
+        "2025 2nd (DET)"
+      ]
+    },
+    {
+      "id": "MIA",
+      "name": "Miami",
+      "fullName": "Miami Heat",
+      "conference": "Eastern",
+      "color": "#98002E",
+      "totalPayroll": 182400000,
+      "apronTier": "first_apron",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_butler",
+          "name": "Jimmy Butler",
+          "pos": "SF",
+          "salary": 48798677,
+          "isProtected": true
+        },
+        {
+          "id": "p_adebayo",
+          "name": "Bam Adebayo",
+          "pos": "C",
+          "salary": 34848340,
+          "isProtected": true
+        },
+        {
+          "id": "p_herro",
+          "name": "Tyler Herro",
+          "pos": "SG",
+          "salary": 29000000,
+          "isProtected": false
+        },
+        {
+          "id": "p_robinson_d",
+          "name": "Duncan Robinson",
+          "pos": "SG",
+          "salary": 19888000,
+          "isProtected": false
+        },
+        {
+          "id": "p_rozier_m",
+          "name": "Terry Rozier",
+          "pos": "PG",
+          "salary": 24924126,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2026 1st (MIA)",
+        "2028 1st (MIA)"
+      ]
+    },
+    {
+      "id": "ORL",
+      "name": "Orlando",
+      "fullName": "Orlando Magic",
+      "conference": "Eastern",
+      "color": "#0077C0",
+      "totalPayroll": 138000000,
+      "apronTier": "under_cap",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_banchero",
+          "name": "Paolo Banchero",
+          "pos": "PF",
+          "salary": 12160800,
+          "isProtected": true
+        },
+        {
+          "id": "p_wagner_f",
+          "name": "Franz Wagner",
+          "pos": "SF",
+          "salary": 7007092,
+          "isProtected": true
+        },
+        {
+          "id": "p_suggs",
+          "name": "Jalen Suggs",
+          "pos": "PG",
+          "salary": 9188385,
+          "isProtected": true
+        },
+        {
+          "id": "p_caldwell_pope",
+          "name": "Kentavious Caldwell-Pope",
+          "pos": "SG",
+          "salary": 22000000,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (ORL)",
+        "2025 1st (DEN)",
+        "2026 1st (ORL)"
+      ]
+    },
+    {
+      "id": "CHA",
+      "name": "Charlotte",
+      "fullName": "Charlotte Hornets",
+      "conference": "Eastern",
+      "color": "#00788C",
+      "totalPayroll": 126400000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_hayward",
+          "name": "Gordon Hayward Exception",
+          "amount": 8900000,
+          "expires": "2025-07-08"
+        },
+        {
+          "id": "tpe_rozier",
+          "name": "Terry Rozier Exception",
+          "amount": 4200000,
+          "expires": "2025-06-30"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_ball",
+          "name": "LaMelo Ball",
+          "pos": "PG",
+          "salary": 35147000,
+          "isProtected": true
+        },
+        {
+          "id": "p_miller",
+          "name": "Brandon Miller",
+          "pos": "SF",
+          "salary": 11424600,
+          "isProtected": true
+        },
+        {
+          "id": "p_bridges_m",
+          "name": "Miles Bridges",
+          "pos": "PF",
+          "salary": 25000000,
+          "isProtected": false
+        },
+        {
+          "id": "p_richards",
+          "name": "Nick Richards",
+          "pos": "C",
+          "salary": 5000000,
+          "isProtected": false
+        },
+        {
+          "id": "p_williams_g",
+          "name": "Grant Williams",
+          "pos": "PF",
+          "salary": 13025250,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (CHA)",
+        "2026 1st (CHA)",
+        "2025 2nd (CHA)"
+      ]
+    },
+    {
+      "id": "ATL",
+      "name": "Atlanta",
+      "fullName": "Atlanta Hawks",
+      "conference": "Eastern",
+      "color": "#C8102E",
+      "totalPayroll": 154000000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_murray",
+          "name": "Dejounte Murray TPE",
+          "amount": 12300000,
+          "expires": "2025-07-06"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_young",
+          "name": "Trae Young",
+          "pos": "PG",
+          "salary": 43031940,
+          "isProtected": true
+        },
+        {
+          "id": "p_johnson_j",
+          "name": "Jalen Johnson",
+          "pos": "PF",
+          "salary": 4510905,
+          "isProtected": true
+        },
+        {
+          "id": "p_capela",
+          "name": "Clint Capela",
+          "pos": "C",
+          "salary": 22265280,
+          "isProtected": false
+        },
+        {
+          "id": "p_bogdanovic_b",
+          "name": "Bogdan Bogdanovic",
+          "pos": "SG",
+          "salary": 17260000,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (LAL)",
+        "2026 1st (ATL)"
+      ]
+    },
+    {
+      "id": "WAS",
+      "name": "Washington",
+      "fullName": "Washington Wizards",
+      "conference": "Eastern",
+      "color": "#002B5C",
+      "totalPayroll": 130500000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_gafford",
+          "name": "Daniel Gafford TPE",
+          "amount": 13400000,
+          "expires": "2025-07-01"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_poole",
+          "name": "Jordan Poole",
+          "pos": "SG",
+          "salary": 29651786,
+          "isProtected": false
+        },
+        {
+          "id": "p_kuzma",
+          "name": "Kyle Kuzma",
+          "pos": "PF",
+          "salary": 23522727,
+          "isProtected": false
+        },
+        {
+          "id": "p_sarr",
+          "name": "Alex Sarr",
+          "pos": "C",
+          "salary": 11245000,
+          "isProtected": true
+        },
+        {
+          "id": "p_coulibaly",
+          "name": "Bilal Coulibaly",
+          "pos": "SF",
+          "salary": 6945240,
+          "isProtected": true
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (WAS)",
+        "2026 1st (WAS)",
+        "2027 1st (WAS)"
+      ]
+    },
+    {
+      "id": "LAL",
+      "name": "LA Lakers",
+      "fullName": "Los Angeles Lakers",
+      "conference": "Western",
+      "color": "#552583",
+      "totalPayroll": 188400000,
+      "apronTier": "first_apron",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_lebron",
+          "name": "LeBron James",
+          "pos": "SF",
+          "salary": 48728845,
+          "isProtected": true
+        },
+        {
+          "id": "p_davis",
+          "name": "Anthony Davis",
+          "pos": "C",
+          "salary": 43219440,
+          "isProtected": true
+        },
+        {
+          "id": "p_reaves",
+          "name": "Austin Reaves",
+          "pos": "SG",
+          "salary": 12976362,
+          "isProtected": true
+        },
+        {
+          "id": "p_russell",
+          "name": "D'Angelo Russell",
+          "pos": "PG",
+          "salary": 18692307,
+          "isProtected": false
+        },
+        {
+          "id": "p_hachimura",
+          "name": "Rui Hachimura",
+          "pos": "PF",
+          "salary": 17000000,
+          "isProtected": false
+        },
+        {
+          "id": "p_vanderbilt",
+          "name": "Jarred Vanderbilt",
+          "pos": "PF",
+          "salary": 10714286,
+          "isProtected": false
+        },
+        {
+          "id": "p_vincent",
+          "name": "Gabe Vincent",
+          "pos": "PG",
+          "salary": 11000000,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2029 1st (LAL)",
+        "2031 1st (LAL)"
+      ]
+    },
+    {
+      "id": "GSW",
+      "name": "Golden State",
+      "fullName": "Golden State Warriors",
+      "conference": "Western",
+      "color": "#1D428A",
+      "totalPayroll": 177800000,
+      "apronTier": "taxpayer",
+      "tpes": [
+        {
+          "id": "tpe_thompson",
+          "name": "Klay Thompson TPE",
+          "amount": 16000000,
+          "expires": "2025-07-06"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_curry",
+          "name": "Stephen Curry",
+          "pos": "PG",
+          "salary": 55761216,
+          "isProtected": true
+        },
+        {
+          "id": "p_green_d",
+          "name": "Draymond Green",
+          "pos": "PF",
+          "salary": 24107143,
+          "isProtected": true
+        },
+        {
+          "id": "p_wiggins",
+          "name": "Andrew Wiggins",
+          "pos": "SF",
+          "salary": 26276786,
+          "isProtected": false
+        },
+        {
+          "id": "p_kuminga",
+          "name": "Jonathan Kuminga",
+          "pos": "PF",
+          "salary": 7639302,
+          "isProtected": true
+        },
+        {
+          "id": "p_moody",
+          "name": "Moses Moody",
+          "pos": "SG",
+          "salary": 5803269,
+          "isProtected": false
+        },
+        {
+          "id": "p_hield",
+          "name": "Buddy Hield",
+          "pos": "SG",
+          "salary": 8780000,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2026 1st (GSW)",
+        "2028 1st (GSW)"
+      ]
+    },
+    {
+      "id": "PHX",
+      "name": "Phoenix",
+      "fullName": "Phoenix Suns",
+      "conference": "Western",
+      "color": "#1D1160",
+      "totalPayroll": 223500000,
+      "apronTier": "second_apron",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_durant",
+          "name": "Kevin Durant",
+          "pos": "PF",
+          "salary": 51179021,
+          "isProtected": true
+        },
+        {
+          "id": "p_booker",
+          "name": "Devin Booker",
+          "pos": "SG",
+          "salary": 49205800,
+          "isProtected": true
+        },
+        {
+          "id": "p_beal",
+          "name": "Bradley Beal",
+          "pos": "SG",
+          "salary": 50203930,
+          "isProtected": true
+        },
+        {
+          "id": "p_nurkic",
+          "name": "Jusuf Nurkic",
+          "pos": "C",
+          "salary": 18125000,
+          "isProtected": false
+        },
+        {
+          "id": "p_allen_g",
+          "name": "Grayson Allen",
+          "pos": "SG",
+          "salary": 15625000,
+          "isProtected": false
+        },
+        {
+          "id": "p_oneale",
+          "name": "Royce O'Neale",
+          "pos": "SF",
+          "salary": 9876543,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2031 1st (PHX)"
+      ]
+    },
+    {
+      "id": "LAC",
+      "name": "LA Clippers",
+      "fullName": "LA Clippers",
+      "conference": "Western",
+      "color": "#C8102E",
+      "totalPayroll": 172000000,
+      "apronTier": "taxpayer",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_kawhi",
+          "name": "Kawhi Leonard",
+          "pos": "SF",
+          "salary": 49205800,
+          "isProtected": true
+        },
+        {
+          "id": "p_harden",
+          "name": "James Harden",
+          "pos": "PG",
+          "salary": 33653846,
+          "isProtected": true
+        },
+        {
+          "id": "p_zubac",
+          "name": "Ivica Zubac",
+          "pos": "C",
+          "salary": 11743210,
+          "isProtected": false
+        },
+        {
+          "id": "p_powell",
+          "name": "Norman Powell",
+          "pos": "SG",
+          "salary": 19241379,
+          "isProtected": false
+        },
+        {
+          "id": "p_mann_t",
+          "name": "Terance Mann",
+          "pos": "SG",
+          "salary": 11423077,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2030 1st (LAC)"
+      ]
+    },
+    {
+      "id": "SAC",
+      "name": "Sacramento",
+      "fullName": "Sacramento Kings",
+      "conference": "Western",
+      "color": "#5A2D81",
+      "totalPayroll": 169500000,
+      "apronTier": "under_cap",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_fox",
+          "name": "De'Aaron Fox",
+          "pos": "PG",
+          "salary": 34848340,
+          "isProtected": true
+        },
+        {
+          "id": "p_sabonis",
+          "name": "Domantas Sabonis",
+          "pos": "C",
+          "salary": 39200000,
+          "isProtected": true
+        },
+        {
+          "id": "p_derozan_s",
+          "name": "DeMar DeRozan",
+          "pos": "SF",
+          "salary": 23300000,
+          "isProtected": false
+        },
+        {
+          "id": "p_monk",
+          "name": "Malik Monk",
+          "pos": "SG",
+          "salary": 17405203,
+          "isProtected": false
+        },
+        {
+          "id": "p_murray_k",
+          "name": "Keegan Murray",
+          "pos": "PF",
+          "salary": 8809560,
+          "isProtected": true
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (SAC)",
+        "2027 1st (SAC)"
+      ]
+    },
+    {
+      "id": "DEN",
+      "name": "Denver",
+      "fullName": "Denver Nuggets",
+      "conference": "Western",
+      "color": "#0E2240",
+      "totalPayroll": 192800000,
+      "apronTier": "second_apron",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_jokic",
+          "name": "Nikola Jokic",
+          "pos": "C",
+          "salary": 51415938,
+          "isProtected": true
+        },
+        {
+          "id": "p_murray_j",
+          "name": "Jamal Murray",
+          "pos": "PG",
+          "salary": 36016200,
+          "isProtected": true
+        },
+        {
+          "id": "p_porter",
+          "name": "Michael Porter Jr.",
+          "pos": "SF",
+          "salary": 35859915,
+          "isProtected": false
+        },
+        {
+          "id": "p_gordon",
+          "name": "Aaron Gordon",
+          "pos": "PF",
+          "salary": 22841455,
+          "isProtected": true
+        },
+        {
+          "id": "p_braun",
+          "name": "Christian Braun",
+          "pos": "SG",
+          "salary": 3089919,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2031 1st (DEN)"
+      ]
+    },
+    {
+      "id": "OKC",
+      "name": "Oklahoma City",
+      "fullName": "Oklahoma City Thunder",
+      "conference": "Western",
+      "color": "#007AC1",
+      "totalPayroll": 142000000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_okc_cap",
+          "name": "OKC Facilitation Exception",
+          "amount": 16500000,
+          "expires": "2025-08-01"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_sga",
+          "name": "Shai Gilgeous-Alexander",
+          "pos": "PG",
+          "salary": 35859915,
+          "isProtected": true
+        },
+        {
+          "id": "p_holmgren",
+          "name": "Chet Holmgren",
+          "pos": "C",
+          "salary": 10880640,
+          "isProtected": true
+        },
+        {
+          "id": "p_williams_j",
+          "name": "Jalen Williams",
+          "pos": "SF",
+          "salary": 4775760,
+          "isProtected": true
+        },
+        {
+          "id": "p_hartenstein",
+          "name": "Isaiah Hartenstein",
+          "pos": "C",
+          "salary": 30000000,
+          "isProtected": false
+        },
+        {
+          "id": "p_caruso",
+          "name": "Alex Caruso",
+          "pos": "SG",
+          "salary": 9890000,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (OKC)",
+        "2025 1st (MIA)",
+        "2025 1st (PHI)",
+        "2026 1st (HOU)",
+        "2026 1st (LAC)"
+      ]
+    },
+    {
+      "id": "MIN",
+      "name": "Minnesota",
+      "fullName": "Minnesota Timberwolves",
+      "conference": "Western",
+      "color": "#0C2340",
+      "totalPayroll": 194500000,
+      "apronTier": "second_apron",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_edwards",
+          "name": "Anthony Edwards",
+          "pos": "SG",
+          "salary": 35147000,
+          "isProtected": true
+        },
+        {
+          "id": "p_gobert",
+          "name": "Rudy Gobert",
+          "pos": "C",
+          "salary": 43827587,
+          "isProtected": true
+        },
+        {
+          "id": "p_towns",
+          "name": "Karl-Anthony Towns",
+          "pos": "C",
+          "salary": 49205800,
+          "isProtected": false
+        },
+        {
+          "id": "p_mcdaniels",
+          "name": "Jaden McDaniels",
+          "pos": "SF",
+          "salary": 22586207,
+          "isProtected": false
+        },
+        {
+          "id": "p_conley",
+          "name": "Mike Conley",
+          "pos": "PG",
+          "salary": 9975000,
+          "isProtected": false
+        },
+        {
+          "id": "p_reid",
+          "name": "Naz Reid",
+          "pos": "C",
+          "salary": 13986432,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2026 2nd (MIN)",
+        "2031 1st (MIN)"
+      ]
+    },
+    {
+      "id": "UTA",
+      "name": "Utah",
+      "fullName": "Utah Jazz",
+      "conference": "Western",
+      "color": "#002B5C",
+      "totalPayroll": 128000000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_jazz",
+          "name": "Utah Absorption Exception",
+          "amount": 14800000,
+          "expires": "2025-07-20"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_markkanen",
+          "name": "Lauri Markkanen",
+          "pos": "PF",
+          "salary": 42176400,
+          "isProtected": true
+        },
+        {
+          "id": "p_sexton",
+          "name": "Collin Sexton",
+          "pos": "SG",
+          "salary": 18350000,
+          "isProtected": false
+        },
+        {
+          "id": "p_clarkson",
+          "name": "Jordan Clarkson",
+          "pos": "SG",
+          "salary": 14092577,
+          "isProtected": false
+        },
+        {
+          "id": "p_kessler",
+          "name": "Walker Kessler",
+          "pos": "C",
+          "salary": 2965920,
+          "isProtected": true
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (UTA)",
+        "2025 1st (CLE)",
+        "2027 1st (MIN)",
+        "2029 1st (CLE)"
+      ]
+    },
+    {
+      "id": "POR",
+      "name": "Portland",
+      "fullName": "Portland Trail Blazers",
+      "conference": "Western",
+      "color": "#E03A3E",
+      "totalPayroll": 148500000,
+      "apronTier": "under_cap",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_scoot",
+          "name": "Scoot Henderson",
+          "pos": "PG",
+          "salary": 10259160,
+          "isProtected": true
+        },
+        {
+          "id": "p_sharpe",
+          "name": "Shaedon Sharpe",
+          "pos": "SG",
+          "salary": 6614160,
+          "isProtected": true
+        },
+        {
+          "id": "p_grant",
+          "name": "Jerami Grant",
+          "pos": "PF",
+          "salary": 29791040,
+          "isProtected": false
+        },
+        {
+          "id": "p_ayton",
+          "name": "Deandre Ayton",
+          "pos": "C",
+          "salary": 34005126,
+          "isProtected": false
+        },
+        {
+          "id": "p_simons_a",
+          "name": "Anfernee Simons",
+          "pos": "SG",
+          "salary": 25892857,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (POR)",
+        "2028 1st (GSW)"
+      ]
+    },
+    {
+      "id": "DAL",
+      "name": "Dallas",
+      "fullName": "Dallas Mavericks",
+      "conference": "Western",
+      "color": "#00538C",
+      "totalPayroll": 178200000,
+      "apronTier": "first_apron",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_doncic",
+          "name": "Luka Doncic",
+          "pos": "PG",
+          "salary": 43031940,
+          "isProtected": true
+        },
+        {
+          "id": "p_irving",
+          "name": "Kyrie Irving",
+          "pos": "SG",
+          "salary": 41000000,
+          "isProtected": true
+        },
+        {
+          "id": "p_thompson_k",
+          "name": "Klay Thompson",
+          "pos": "SG",
+          "salary": 15873016,
+          "isProtected": false
+        },
+        {
+          "id": "p_washington",
+          "name": "P.J. Washington",
+          "pos": "PF",
+          "salary": 15500000,
+          "isProtected": false
+        },
+        {
+          "id": "p_gafford_d",
+          "name": "Daniel Gafford",
+          "pos": "C",
+          "salary": 13394160,
+          "isProtected": false
+        },
+        {
+          "id": "p_lively",
+          "name": "Dereck Lively II",
+          "pos": "C",
+          "salary": 5014560,
+          "isProtected": true
+        }
+      ],
+      "draftPicks": [
+        "2025 2nd (DAL)",
+        "2031 1st (DAL)"
+      ]
+    },
+    {
+      "id": "HOU",
+      "name": "Houston",
+      "fullName": "Houston Rockets",
+      "conference": "Western",
+      "color": "#CE1141",
+      "totalPayroll": 152000000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_rockets",
+          "name": "Houston Trade Room",
+          "amount": 11200000,
+          "expires": "2025-07-15"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_sengun",
+          "name": "Alperen Sengun",
+          "pos": "C",
+          "salary": 5424654,
+          "isProtected": true
+        },
+        {
+          "id": "p_green_j",
+          "name": "Jalen Green",
+          "pos": "SG",
+          "salary": 12483048,
+          "isProtected": true
+        },
+        {
+          "id": "p_vanvleet",
+          "name": "Fred VanVleet",
+          "pos": "PG",
+          "salary": 42846615,
+          "isProtected": false
+        },
+        {
+          "id": "p_brooks",
+          "name": "Dillon Brooks",
+          "pos": "SF",
+          "salary": 22255493,
+          "isProtected": false
+        },
+        {
+          "id": "p_smith_j",
+          "name": "Jabari Smith Jr.",
+          "pos": "PF",
+          "salary": 9770880,
+          "isProtected": true
+        },
+        {
+          "id": "p_thompson_a",
+          "name": "Amen Thompson",
+          "pos": "PG",
+          "salary": 9249960,
+          "isProtected": true
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (HOU)",
+        "2025 1st (PHX)",
+        "2027 1st (PHX)"
+      ]
+    },
+    {
+      "id": "SAS",
+      "name": "San Antonio",
+      "fullName": "San Antonio Spurs",
+      "conference": "Western",
+      "color": "#C4CED4",
+      "totalPayroll": 134000000,
+      "apronTier": "under_cap",
+      "tpes": [
+        {
+          "id": "tpe_spurs",
+          "name": "Spurs Cap Room Exception",
+          "amount": 17800000,
+          "expires": "2025-07-25"
+        }
+      ],
+      "roster": [
+        {
+          "id": "p_wemby",
+          "name": "Victor Wembanyama",
+          "pos": "C",
+          "salary": 12768960,
+          "isProtected": true
+        },
+        {
+          "id": "p_paul",
+          "name": "Chris Paul",
+          "pos": "PG",
+          "salary": 10460000,
+          "isProtected": false
+        },
+        {
+          "id": "p_vassell",
+          "name": "Devin Vassell",
+          "pos": "SG",
+          "salary": 29347826,
+          "isProtected": true
+        },
+        {
+          "id": "p_sochan",
+          "name": "Jeremy Sochan",
+          "pos": "PF",
+          "salary": 5570040,
+          "isProtected": true
+        },
+        {
+          "id": "p_barnes_h",
+          "name": "Harrison Barnes",
+          "pos": "SF",
+          "salary": 18000000,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (SAS)",
+        "2025 1st (ATL)",
+        "2026 1st (SAS)",
+        "2027 1st (ATL)"
+      ]
+    },
+    {
+      "id": "MEM",
+      "name": "Memphis",
+      "fullName": "Memphis Grizzlies",
+      "conference": "Western",
+      "color": "#5D76A9",
+      "totalPayroll": 167000000,
+      "apronTier": "under_cap",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_morant",
+          "name": "Ja Morant",
+          "pos": "PG",
+          "salary": 36725670,
+          "isProtected": true
+        },
+        {
+          "id": "p_bane",
+          "name": "Desmond Bane",
+          "pos": "SG",
+          "salary": 34005126,
+          "isProtected": true
+        },
+        {
+          "id": "p_jackson_j",
+          "name": "Jaren Jackson Jr.",
+          "pos": "PF",
+          "salary": 25257732,
+          "isProtected": true
+        },
+        {
+          "id": "p_smart",
+          "name": "Marcus Smart",
+          "pos": "PG",
+          "salary": 20210285,
+          "isProtected": false
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (MEM)",
+        "2026 1st (MEM)"
+      ]
+    },
+    {
+      "id": "NOP",
+      "name": "New Orleans",
+      "fullName": "New Orleans Pelicans",
+      "conference": "Western",
+      "color": "#0C2340",
+      "totalPayroll": 168900000,
+      "apronTier": "under_cap",
+      "tpes": [],
+      "roster": [
+        {
+          "id": "p_williamson",
+          "name": "Zion Williamson",
+          "pos": "PF",
+          "salary": 36725670,
+          "isProtected": true
+        },
+        {
+          "id": "p_ingram",
+          "name": "Brandon Ingram",
+          "pos": "SF",
+          "salary": 36016200,
+          "isProtected": false
+        },
+        {
+          "id": "p_murray_d",
+          "name": "Dejounte Murray",
+          "pos": "PG",
+          "salary": 25500000,
+          "isProtected": true
+        },
+        {
+          "id": "p_mccollum",
+          "name": "CJ McCollum",
+          "pos": "SG",
+          "salary": 33333333,
+          "isProtected": false
+        },
+        {
+          "id": "p_jones_h",
+          "name": "Herbert Jones",
+          "pos": "SF",
+          "salary": 12976362,
+          "isProtected": true
+        },
+        {
+          "id": "p_murphy",
+          "name": "Trey Murphy III",
+          "pos": "SF",
+          "salary": 5159855,
+          "isProtected": true
+        }
+      ],
+      "draftPicks": [
+        "2025 1st (NOP)",
+        "2027 1st (MIL)"
+      ]
+    }
+  ]
+}
