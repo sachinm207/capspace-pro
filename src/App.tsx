@@ -108,21 +108,24 @@ export default function App() {
     setTradeLegs(getInitialLegs(team1Id, team2Id));
   };
 
-  const handleToggleAnchor = (teamId: string, playerId: string, type: 'incoming' | 'outgoing') => {
-    setTradeLegs(prev => prev.map(leg => {
-      if (leg.teamId !== teamId) return leg;
-      if (type === 'incoming') {
-        return {
-          ...leg,
-          incomingPlayers: leg.incomingPlayers.map(p => p.id === playerId ? { ...p, isAnchor: !p.isAnchor } : p)
-        };
-      } else {
-        return {
-          ...leg,
-          outgoingPlayers: leg.outgoingPlayers.map(p => p.id === playerId ? { ...p, isAnchor: !p.isAnchor } : p)
-        };
+  const handleToggleAnchor = (playerId: string) => {
+    setTradeLegs(prev => {
+      let currentAnchor = false;
+      for (const leg of prev) {
+        const found = leg.incomingPlayers.find(p => p.id === playerId) || leg.outgoingPlayers.find(p => p.id === playerId);
+        if (found) {
+          currentAnchor = !!found.isAnchor;
+          break;
+        }
       }
-    }));
+      const nextAnchor = !currentAnchor;
+
+      return prev.map(leg => ({
+        ...leg,
+        incomingPlayers: leg.incomingPlayers.map(p => p.id === playerId ? { ...p, isAnchor: nextAnchor } : p),
+        outgoingPlayers: leg.outgoingPlayers.map(p => p.id === playerId ? { ...p, isAnchor: nextAnchor } : p)
+      }));
+    });
   };
 
   const handleAutoBalanceClick = () => {
@@ -438,7 +441,7 @@ export default function App() {
                               <span className="font-mono font-semibold text-cyan-400 text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
                             </div>
                             <button 
-                              onClick={() => handleToggleAnchor(team1.id, p.id, 'incoming')}
+                              onClick={() => handleToggleAnchor(p.id)}
                               className={`text-[9px] px-1.5 py-0.5 rounded font-semibold flex items-center transition cursor-pointer ${p.isAnchor ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-700/60 text-slate-400 hover:text-slate-200 border border-slate-600/40'}`}
                               title={p.isAnchor ? "Locked Core Target (AI cannot swap or remove)" : "Click to Lock as Core Target"}
                             >
@@ -460,7 +463,7 @@ export default function App() {
                             </div>
                             <div className="flex items-center space-x-1.5 flex-shrink-0">
                               <button 
-                                onClick={() => handleToggleAnchor(team1.id, p.id, 'outgoing')}
+                                onClick={() => handleToggleAnchor(p.id)}
                                 className={`text-[9px] px-1.5 py-0.5 rounded font-semibold flex items-center transition cursor-pointer ${p.isAnchor ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-700/60 text-slate-400 hover:text-slate-200 border border-slate-600/40'}`}
                                 title={p.isAnchor ? "Locked Core Piece (AI cannot substitute or route)" : "Click to Lock as Core Piece"}
                               >
@@ -610,7 +613,7 @@ export default function App() {
                               <span className="font-mono font-semibold text-cyan-400 text-xs">${(p.salary / 1e6).toFixed(2)}M</span>
                             </div>
                             <button 
-                              onClick={() => handleToggleAnchor(team2.id, p.id, 'incoming')}
+                              onClick={() => handleToggleAnchor(p.id)}
                               className={`text-[9px] px-1.5 py-0.5 rounded font-semibold flex items-center transition cursor-pointer ${p.isAnchor ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-700/60 text-slate-400 hover:text-slate-200 border border-slate-600/40'}`}
                               title={p.isAnchor ? "Locked Core Target (AI cannot swap or remove)" : "Click to Lock as Core Target"}
                             >
@@ -632,7 +635,7 @@ export default function App() {
                             </div>
                             <div className="flex items-center space-x-1.5 flex-shrink-0">
                               <button 
-                                onClick={() => handleToggleAnchor(team2.id, p.id, 'outgoing')}
+                                onClick={() => handleToggleAnchor(p.id)}
                                 className={`text-[9px] px-1.5 py-0.5 rounded font-semibold flex items-center transition cursor-pointer ${p.isAnchor ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-700/60 text-slate-400 hover:text-slate-200 border border-slate-600/40'}`}
                                 title={p.isAnchor ? "Locked Core Piece (AI cannot substitute or route)" : "Click to Lock as Core Piece"}
                               >
