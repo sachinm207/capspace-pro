@@ -100,9 +100,19 @@ npm run build
 
 ---
 
+## 📚 Project Documentation & Gallery
+
+* **[Beginner's Layman Guide](docs/BEGINNER_GUIDE.md):** Plain English guide to NBA salary caps, luxury tax aprons, and trade rules.
+* **[Assumptions & Technical Architecture](docs/ASSUMPTIONS.md):** Detailed mathematical specification, data ingestion model, and CBA constants.
+* **[Devpost Submission Document](DEVPOST_SUBMISSION.md):** Complete hackathon submission narrative, elevator pitches, and 25 verified built-with tags.
+* **[Screenshot Gallery](gallery/):** 5 high-resolution (3:2 ratio) authentic screenshots of the live application.
+
+---
+
 ## ⚖️ License & Trademark Compliance
 
 * **Open Source:** Licensed under the [MIT License](LICENSE).
 * **Security:** 0 npm audit vulnerabilities.
 * **Trademark Safety:** Team identities use plain-text city names, standard statistical abbreviations (`BOS`, `LAL`, `NYK`), and generic sports iconography. No copyrighted NBA franchise logos or league silhouettes are included.
+
 
