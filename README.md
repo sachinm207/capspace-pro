@@ -23,7 +23,7 @@ Under the 2025–26 NBA Season CBA rules:
 * Trades must satisfy exact piecewise arithmetic matching brackets ($7.5M, $29M tiers, $250k buffers) down to the single dollar across all participating teams.
 * Multi-team trades require matching Traded Player Exceptions (TPEs) and maintaining legal 14–15 player roster limits.
 
-**CapSpace Pro** provides an interactive 30-team trade canvas coupled with high-speed deterministic constraint solving. By exposing the CBA rulebook as native **WebMCP tools**, AI agents and human General Managers can collaborate seamlessly to restructure complex multi-contract trades in real time.
+**CapSpace Pro** provides an interactive 30-team trade canvas coupled with high-speed deterministic constraint solving. By exposing the CBA rulebook as native **WebMCP tools**, AI agents and human journalists, fans,  General Managers can collaborate seamlessly with the app to restructure complex multi-contract trades in real time.
 
 ---
 
@@ -104,7 +104,6 @@ npm run build
 
 * **[Beginner's Layman Guide](docs/BEGINNER_GUIDE.md):** Plain English guide to NBA salary caps, luxury tax aprons, and trade rules.
 * **[Assumptions & Technical Architecture](docs/ASSUMPTIONS.md):** Detailed mathematical specification, data ingestion model, and CBA constants.
-* **[Devpost Submission Document](DEVPOST_SUBMISSION.md):** Complete hackathon submission narrative, elevator pitches, and 25 verified built-with tags.
 * **[Screenshot Gallery](gallery/):** 5 high-resolution (3:2 ratio) authentic screenshots of the live application.
 
 ---
@@ -114,5 +113,4 @@ npm run build
 * **Open Source:** Licensed under the [MIT License](LICENSE).
 * **Security:** 0 npm audit vulnerabilities.
 * **Trademark Safety:** Team identities use plain-text city names, standard statistical abbreviations (`BOS`, `LAL`, `NYK`), and generic sports iconography. No copyrighted NBA franchise logos or league silhouettes are included.
-
 
